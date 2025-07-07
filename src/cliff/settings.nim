@@ -1,17 +1,19 @@
-import math, strutils
+import math, strutils, options
 
 
 type
     ByteMapping* = object
-        size*: int
-        mapping*: ptr UncheckedArray[int]
+        # size*: int
+        # mapping*: ptr UncheckedArray[int]
+        mapping*: seq[int]
         correct*: bool # true if all numbers are present
 
 converter array_to_bytemapping*(arr: seq[int]): ByteMapping =
     var check: seq[bool] = newSeq[bool](len(arr))
     result = ByteMapping(
-        size: len(arr),
-        mapping: cast[ptr UncheckedArray[int]](alloc0(len(arr) * sizeof(int))),
+        # size: len(arr),
+        # mapping: cast[ptr UncheckedArray[int]](alloc0(len(arr) * sizeof(int))),
+        mapping: newSeq[int](len(arr)),
         correct: false
     )
     for i in 0 ..< len(arr):
@@ -24,12 +26,25 @@ converter array_to_bytemapping*(arr: seq[int]): ByteMapping =
     result.correct = not missing
 
 proc bytemap*(data: openArray[byte], bm: ByteMapping): seq[byte]=
-    for i in 0..<min(len(data), bm.size):
+    for i in 0..<min(len(data), len(bm.mapping)):
         result &= data[bm.mapping[i]]
 
 proc bytemap*(data: ptr UncheckedArray[byte], bm: ByteMapping): seq[byte]=
-    for i in 0..<bm.size:
+    for i in 0..<len(bm.mapping):
         result &= data[bm.mapping[i]]
+
+proc make_inverse*(bm: ByteMapping): Option[ByteMapping] =
+    if not bm.correct:
+        return none(ByteMapping)
+    else:
+        var out_map = newSeq[int](len(bm.mapping))
+        for i in 0..<len(bm.mapping):
+            block innerloop:
+                for j in 0..<len(bm.mapping):
+                    if bm.mapping[j] == i:
+                        out_map[i] = j
+                        break innerloop
+        return some(array_to_bytemapping(out_map))
 
 proc to_int*[T: SomeInteger](data: openArray[byte]): T =
     assert len(data) >= sizeof(T)
