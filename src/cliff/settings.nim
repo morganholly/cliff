@@ -1,4 +1,5 @@
-import math, strutils, options
+import std/options
+# import std/strutils
 
 
 type
@@ -261,3 +262,42 @@ proc write_field*(section: ByteSection, pf: PositionedField): void =
                         else:
                             pf.offset
     write_field(cast[ptr UncheckedArray[byte]](cast[uint](section.data) + uint(offset)), pf.field)
+
+type
+    CSFieldOrder* = enum
+        ## Id, length 1, or PAL, prepend_append_lengths, can come first
+        csfo_PAL_Id_L1_L2,
+        csfo_PAL_Id_L2_L1,
+        csfo_PAL_L1_Id_L2,
+        csfo_PAL_L1_L2_Id,
+
+        csfo_Id_PAL_L1_L2,
+        csfo_Id_PAL_L2_L1,
+        csfo_L1_PAL_Id_L2,
+        csfo_L1_PAL_L2_Id,
+
+        csfo_Id_L1_PAL_L2,
+        csfo_Id_L2_PAL_L1,
+        csfo_L1_Id_PAL_L2,
+        csfo_L1_L2_PAL_Id,
+
+        csfo_Id_L1_L2_PAL,
+        csfo_Id_L2_L1_PAL,
+        csfo_L1_Id_L2_PAL,
+        csfo_L1_L2_Id_PAL,
+
+    CliffSettings* = object
+        field_order *: CSFieldOrder
+        ## fields, containing values and types, are passed in in `field_order` order, as the values are parsed
+        ## the first proc gets no input, second gets one, third gets two, and fourth gets three
+        ## crc gets all values
+        ##
+        ## once `prepend_append_lengths` is called
+        ## all following procs will recieve a value for either the prepend (first three) or append (crc)
+        field_id   *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
+        field_len1 *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
+        field_len2 *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
+        prepend_append_lengths *: proc (spf: seq[PositionedField]): (int, int)
+        ## always determined last
+        field_crc  *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
+        crc_after_data *: bool
