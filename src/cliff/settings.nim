@@ -54,6 +54,14 @@ proc to_int*[T: SomeInteger](data: openArray[byte]): T =
         result = result or (cast[T](data[i]) shl (i * 8))
     return cast[T](result)
 
+proc to_int*[T: SomeInteger](data: ptr UncheckedArray[byte], length: int): T =
+    assert length >= sizeof(T)
+    var n = min(length, 8)
+    for i in 0..<n:
+        # result = result or (cast[uint64](data[i]) shl ((n - i - 1) * 8))
+        result = result or (cast[T](data[i]) shl (i * 8))
+    return cast[T](result)
+
 proc from_int*[T: SomeInteger](integer: T): seq[byte] =
     var integer64: uint64 = cast[uint64](integer)
     var n = min(sizeof(T), 8)
@@ -61,40 +69,48 @@ proc from_int*[T: SomeInteger](integer: T): seq[byte] =
         # result[i] = cast[byte]((integer64 shr ((n - i - 1) * 8)) and 0xFF)
         result &= cast[byte]((integer64 shr (i * 8)) and 0xFF)
 
-# block:
-#     echo(toHex(0x12345678'u64))
-#     echo(0x12345678'u64)
-#     echo(from_int[uint64](0x12345678'u64))
-#     echo(to_int[uint64](from_int[uint64](0x12345678'u64)))
-#     echo(toHex(to_int[uint64](from_int[uint64](0x12345678'u64))))
+proc write_int*[T: SomeInteger](integer: T, data: ptr UncheckedArray[byte]): void =
+    var integer64: uint64 = cast[uint64](integer)
+    var n = min(sizeof(T), 8)
+    for i in 0..<n:
+        # result[i] = cast[byte]((integer64 shr ((n - i - 1) * 8)) and 0xFF)
+        data[i] = cast[byte]((integer64 shr (i * 8)) and 0xFF)
 
-#     echo(toHex(0x12345678'u32))
-#     echo(0x12345678'u32)
-#     echo(from_int[uint32](0x12345678'u32))
-#     echo(to_int[uint32](from_int[uint32](0x12345678'u32)))
-#     echo(toHex(to_int[uint32](from_int[uint32](0x12345678'u32))))
+block:
+    # echo(toHex(0x12345678'u64))
+    # echo(0x12345678'u64)
+    # echo(from_int[uint64](0x12345678'u64))
+    # echo(to_int[uint64](from_int[uint64](0x12345678'u64)))
+    # echo(toHex(to_int[uint64](from_int[uint64](0x12345678'u64))))
 
-#     echo(toHex(0x1234'u32))
-#     echo(0x1234'u32)
-#     echo(from_int[uint32](0x1234'u32))
-#     echo(to_int[uint32](from_int[uint32](0x1234'u32)))
-#     echo(toHex(to_int[uint32](from_int[uint32](0x1234'u32))))
+    # echo(toHex(0x12345678'u32))
+    # echo(0x12345678'u32)
+    # echo(from_int[uint32](0x12345678'u32))
+    # echo(to_int[uint32](from_int[uint32](0x12345678'u32)))
+    # echo(toHex(to_int[uint32](from_int[uint32](0x12345678'u32))))
 
-#     echo(toHex(0xA3'u8))
-#     echo(0xA3'u8)
-#     echo(from_int[uint8](0xA3'u8))
-#     echo(to_int[uint8](from_int[uint8](0xA3'u8)))
-#     echo(toHex(to_int[uint8](from_int[uint8](0xA3'u8))))
+    # echo(toHex(0x1234'u32))
+    # echo(0x1234'u32)
+    # echo(from_int[uint32](0x1234'u32))
+    # echo(to_int[uint32](from_int[uint32](0x1234'u32)))
+    # echo(toHex(to_int[uint32](from_int[uint32](0x1234'u32))))
 
-#     # var bmtest: ByteMapping = @[4, 5, 6, 7, 0, 1, 2, 3]
-#     var bmtest: ByteMapping = @[1, 0, 3, 2, 5, 4, 7, 6]
+    # echo(toHex(0xA3'u8))
+    # echo(0xA3'u8)
+    # echo(from_int[uint8](0xA3'u8))
+    # echo(to_int[uint8](from_int[uint8](0xA3'u8)))
+    # echo(toHex(to_int[uint8](from_int[uint8](0xA3'u8))))
 
-#     echo(toHex(0x12345678'u64))
-#     echo(0x12345678'u64)
-#     echo(from_int[uint64](0x12345678'u64))
-#     echo(from_int[uint64](0x12345678'u64).bytemap(bmtest))
-#     echo(to_int[uint64](from_int[uint64](0x12345678'u64).bytemap(bmtest)))
-#     echo(toHex(to_int[uint64](from_int[uint64](0x12345678'u64).bytemap(bmtest))))
+    # # var bmtest: ByteMapping = @[4, 5, 6, 7, 0, 1, 2, 3]
+    # var bmtest: ByteMapping = @[1, 0, 3, 2, 5, 4, 7, 6]
+
+    # echo(toHex(0x12345678'u64))
+    # echo(0x12345678'u64)
+    # echo(from_int[uint64](0x12345678'u64))
+    # echo(from_int[uint64](0x12345678'u64).bytemap(bmtest))
+    # echo(to_int[uint64](from_int[uint64](0x12345678'u64).bytemap(bmtest)))
+    # echo(toHex(to_int[uint64](from_int[uint64](0x12345678'u64).bytemap(bmtest))))
+    discard
 
 type
     FieldKind* = enum
@@ -161,10 +177,16 @@ proc parse_field*(data: openArray[byte], field: Field): Field =
         of fkFloat64: result.val_float_64 = cast[float64](to_int[uint64](remapped))
         of fkChar4:   result.val_char_4   = [cast[char](remapped[0]), cast[char](remapped[1]), cast[char](remapped[2]), cast[char](remapped[3])]
         of fkByteSeq: result.val_byte_seq = @remapped
+    # case field.kind:
+    #     of fkBool, fkInt8, fkUInt8:               result.length = 1
+    #     of fkInt16, fkUInt16:                     result.length = 2
+    #     of fkInt32, fkUInt32, fkFloat32, fkChar4: result.length = 4
+    #     of fkInt64, fkUInt64, fkFloat64:          result.length = 8
+    #     of fkByteSeq:                             result.length = len(remapped)
     result.bool_from_byte = field.bool_from_byte
     result.bool_to_byte   = field.bool_to_byte
 
-proc parse_field*(data: ptr UncheckedArray[byte], length: int, field: Field): Field =
+proc parse_field*(data: ptr UncheckedArray[byte], field: Field): Field =
     # input is not modified since it will be read from settings object
     result = Field(
         mapping: field.mapping,
@@ -206,3 +228,36 @@ proc field_to_bytes*(field: Field): seq[byte] =
         of fkChar4:   unremapped  = @[cast[byte](field.val_char_4[0]), cast[byte](field.val_char_4[1]), cast[byte](field.val_char_4[2]), cast[byte](field.val_char_4[3])]
         of fkByteSeq: unremapped  = field.val_byte_seq
     return bytemap(unremapped, field.inverse)
+
+proc write_field*(data: ptr UncheckedArray[byte], field: Field): void =
+    let bytes = field_to_bytes(field)
+    for i in 0..<len(bytes):
+        data[i] = bytes[i]
+
+type
+    ByteSection* = object
+        data *: ptr UncheckedArray[byte]
+        length *: int
+
+    PositionedField* = object
+        field *: Field
+        ## false will position field from start of data length, true will position from end
+        from_end *: bool
+        ## shifts forward when `from_end` is false, shifts back when `from_end` is true
+        ## if `from_end`, length of `field` is accounted for using length of field.mapping.mapping
+        ## always in bytes
+        offset *: int
+
+proc parse_field*(section: ByteSection, pf: PositionedField): Field =
+    let offset: int = if pf.from_end:
+                            section.length - (pf.offset + len(pf.field.mapping.mapping))
+                        else:
+                            pf.offset
+    return parse_field(cast[ptr UncheckedArray[byte]](cast[uint](section.data) + uint(offset)), pf.field)
+
+proc write_field*(section: ByteSection, pf: PositionedField): void =
+    let offset: int = if pf.from_end:
+                            section.length - (pf.offset + len(pf.field.mapping.mapping))
+                        else:
+                            pf.offset
+    write_field(cast[ptr UncheckedArray[byte]](cast[uint](section.data) + uint(offset)), pf.field)
