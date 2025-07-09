@@ -1,0 +1,28 @@
+nimTitle	settings	cliff/settings.html	module src/cliff/settings		0
+nim	ByteMapping	cliff/settings.html#ByteMapping	object ByteMapping		5
+nim	array_to_bytemapping	cliff/settings.html#array_to_bytemapping.c,seq[int]	converter array_to_bytemapping(arr: seq[int]): ByteMapping		11
+nim	bytemap	cliff/settings.html#bytemap,openArray[byte],ByteMapping	proc bytemap(data: openArray[byte]; bm: ByteMapping): seq[byte]		28
+nim	bytemap	cliff/settings.html#bytemap,ptr.UncheckedArray[byte],ByteMapping	proc bytemap(data: ptr UncheckedArray[byte]; bm: ByteMapping): seq[byte]		32
+nim	make_inverse	cliff/settings.html#make_inverse,ByteMapping	proc make_inverse(bm: ByteMapping): Option[ByteMapping]		36
+nim	to_int	cliff/settings.html#to_int,openArray[byte]	proc to_int[T: SomeInteger](data: openArray[byte]): T		49
+nim	from_int	cliff/settings.html#from_int,T	proc from_int[T: SomeInteger](integer: T): seq[byte]		57
+nim	fkBool	cliff/settings.html#fkBool	FieldKind.fkBool		100
+nim	fkInt8	cliff/settings.html#fkInt8	FieldKind.fkInt8		100
+nim	fkInt16	cliff/settings.html#fkInt16	FieldKind.fkInt16		100
+nim	fkInt32	cliff/settings.html#fkInt32	FieldKind.fkInt32		100
+nim	fkInt64	cliff/settings.html#fkInt64	FieldKind.fkInt64		100
+nim	fkUInt8	cliff/settings.html#fkUInt8	FieldKind.fkUInt8		100
+nim	fkUInt16	cliff/settings.html#fkUInt16	FieldKind.fkUInt16		100
+nim	fkUInt32	cliff/settings.html#fkUInt32	FieldKind.fkUInt32		100
+nim	fkUInt64	cliff/settings.html#fkUInt64	FieldKind.fkUInt64		100
+nim	fkFloat32	cliff/settings.html#fkFloat32	FieldKind.fkFloat32		100
+nim	fkFloat64	cliff/settings.html#fkFloat64	FieldKind.fkFloat64		100
+nim	fkChar4	cliff/settings.html#fkChar4	FieldKind.fkChar4		100
+nim	fkByteSeq	cliff/settings.html#fkByteSeq	FieldKind.fkByteSeq		100
+nim	FieldKind	cliff/settings.html#FieldKind	enum FieldKind		100
+nim	Field	cliff/settings.html#Field	object Field		117
+nim	parse_field	cliff/settings.html#parse_field,openArray[byte],Field	proc parse_field(data: openArray[byte]; field: Field): Field		142
+nim	parse_field	cliff/settings.html#parse_field,ptr.UncheckedArray[byte],int,Field	proc parse_field(data: ptr UncheckedArray[byte]; length: int; field: Field): Field		167
+nim	field_to_bytes	cliff/settings.html#field_to_bytes,Field	proc field_to_bytes(field: Field): seq[byte]		192
+nimgrp	parsefield	cliff/settings.html#parse_field-procs-all	proc		142
+nimgrp	bytemap	cliff/settings.html#bytemap-procs-all	proc		28
