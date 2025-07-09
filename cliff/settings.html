@@ -58,6 +58,27 @@
       <li><a class="reference" href="#ByteMapping" title="ByteMapping = object
   mapping*: seq[int]
   correct*: bool">ByteMapping</a></li>
+<li><a class="reference" href="#ByteSection" title="ByteSection = object
+  data*: ptr UncheckedArray[byte]
+  length*: int">ByteSection</a></li>
+<li><a class="reference" href="#CliffSettings" title="CliffSettings = object
+  field_order*: CSFieldOrder ## fields, containing values and types, are passed in in `field_order` order, as the values are parsed
+                             ## the first proc gets no input, second gets one, third gets two, and fourth gets three
+                             ## crc gets all values
+                             ## 
+                             ## once `prepend_append_lengths` is called
+                             ## all following procs will recieve a value for either the prepend (first three) or append (crc)
+  field_id*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
+  field_len1*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
+  field_len2*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
+  prepend_append_lengths*: proc (spf: seq[PositionedField]): (int, int) ## always determined last
+  field_crc*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
+  crc_after_data*: bool">CliffSettings</a></li>
+<li><a class="reference" href="#CSFieldOrder" title="CSFieldOrder = enum
+  csfo_PAL_Id_L1_L2, csfo_PAL_Id_L2_L1, csfo_PAL_L1_Id_L2, csfo_PAL_L1_L2_Id,
+  csfo_Id_PAL_L1_L2, csfo_Id_PAL_L2_L1, csfo_L1_PAL_Id_L2, csfo_L1_PAL_L2_Id,
+  csfo_Id_L1_PAL_L2, csfo_Id_L2_PAL_L1, csfo_L1_Id_PAL_L2, csfo_L1_L2_PAL_Id,
+  csfo_Id_L1_L2_PAL, csfo_Id_L2_L1_PAL, csfo_L1_Id_L2_PAL, csfo_L1_L2_Id_PAL">CSFieldOrder</a></li>
 <li><a class="reference" href="#Field" title="Field = object
   mapping*: ByteMapping
   inverse*: ByteMapping
@@ -88,11 +109,17 @@
     val_char_4*: array[4, char]
   of fkByteSeq:
     val_byte_seq*: seq[byte]
-  bool_from_byte*: proc (read_byte: byte): bool = :anonymous_1140851213
-  bool_to_byte*: proc (write_bool: bool): byte = :anonymous_1140851219">Field</a></li>
+  bool_from_byte*: proc (read_byte: byte): bool = :anonymous_1140851225
+  bool_to_byte*: proc (write_bool: bool): byte = :anonymous_1140851231">Field</a></li>
 <li><a class="reference" href="#FieldKind" title="FieldKind = enum
   fkBool, fkInt8, fkInt16, fkInt32, fkInt64, fkUInt8, fkUInt16, fkUInt32,
   fkUInt64, fkFloat32, fkFloat64, fkChar4, fkByteSeq">FieldKind</a></li>
+<li><a class="reference" href="#PositionedField" title="PositionedField = object
+  field*: Field              ## false will position field from start of data length, true will position from end
+  from_end*: bool ## shifts forward when `from_end` is false, shifts back when `from_end` is true
+                  ## if `from_end`, length of `field` is accounted for using length of field.mapping.mapping
+                  ## always in bytes
+  offset*: int">PositionedField</a></li>
 
     </ul>
   </details>
@@ -120,11 +147,22 @@
 </ul>
 <ul class="simple nested-toc-section">parse_field
   <li><a class="reference" href="#parse_field%2CopenArray%5Bbyte%5D%2CField" title="parse_field(data: openArray[byte]; field: Field): Field">parse_field(data: openArray[byte]; field: Field): Field</a></li>
-<li><a class="reference" href="#parse_field%2Cptr.UncheckedArray%5Bbyte%5D%2Cint%2CField" title="parse_field(data: ptr UncheckedArray[byte]; length: int; field: Field): Field">parse_field(data: ptr UncheckedArray[byte]; length: int; field: Field): Field</a></li>
+<li><a class="reference" href="#parse_field%2Cptr.UncheckedArray%5Bbyte%5D%2CField" title="parse_field(data: ptr UncheckedArray[byte]; field: Field): Field">parse_field(data: ptr UncheckedArray[byte]; field: Field): Field</a></li>
+<li><a class="reference" href="#parse_field%2CByteSection%2CPositionedField" title="parse_field(section: ByteSection; pf: PositionedField): Field">parse_field(section: ByteSection; pf: PositionedField): Field</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">to_int
   <li><a class="reference" href="#to_int%2CopenArray%5Bbyte%5D" title="to_int[T: SomeInteger](data: openArray[byte]): T">to_int[T: SomeInteger](data: openArray[byte]): T</a></li>
+<li><a class="reference" href="#to_int%2Cptr.UncheckedArray%5Bbyte%5D%2Cint" title="to_int[T: SomeInteger](data: ptr UncheckedArray[byte]; length: int): T">to_int[T: SomeInteger](data: ptr UncheckedArray[byte]; length: int): T</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">write_field
+  <li><a class="reference" href="#write_field%2Cptr.UncheckedArray%5Bbyte%5D%2CField" title="write_field(data: ptr UncheckedArray[byte]; field: Field): void">write_field(data: ptr UncheckedArray[byte]; field: Field): void</a></li>
+<li><a class="reference" href="#write_field%2CByteSection%2CPositionedField" title="write_field(section: ByteSection; pf: PositionedField): void">write_field(section: ByteSection; pf: PositionedField): void</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">write_int
+  <li><a class="reference" href="#write_int%2CT%2Cptr.UncheckedArray%5Bbyte%5D" title="write_int[T: SomeInteger](integer: T; data: ptr UncheckedArray[byte]): void">write_int[T: SomeInteger](integer: T; data: ptr UncheckedArray[byte]): void</a></li>
 
 </ul>
 
@@ -164,8 +202,56 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L5" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L5" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L6" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L6" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="ByteSection">
+  <dt><pre><a href="settings.html#ByteSection"><span class="Identifier">ByteSection</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">data</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span>
+  <span class="Identifier">length</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L239" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L239" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CliffSettings">
+  <dt><pre><a href="settings.html#CliffSettings"><span class="Identifier">CliffSettings</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">field_order</span><span class="Operator">*</span><span class="Other">:</span> <a href="settings.html#CSFieldOrder"><span class="Identifier">CSFieldOrder</span></a> <span class="Comment">## fields, containing values and types, are passed in in `field_order` order, as the values are parsed</span>
+                             <span class="Comment">## the first proc gets no input, second gets one, third gets two, and fourth gets three</span>
+                             <span class="Comment">## crc gets all values</span>
+                             <span class="Comment">## </span>
+                             <span class="Comment">## once `prepend_append_lengths` is called</span>
+                             <span class="Comment">## all following procs will recieve a value for either the prepend (first three) or append (crc)</span>
+  <span class="Identifier">field_id</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
+  <span class="Identifier">field_len1</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
+  <span class="Identifier">field_len2</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
+  <span class="Identifier">prepend_append_lengths</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Other">(</span><span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Comment">## always determined last</span>
+  <span class="Identifier">field_crc</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
+  <span class="Identifier">crc_after_data</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L289" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L289" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CSFieldOrder">
+  <dt><pre><a href="settings.html#CSFieldOrder"><span class="Identifier">CSFieldOrder</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">csfo_PAL_Id_L1_L2</span><span class="Other">,</span> <span class="Identifier">csfo_PAL_Id_L2_L1</span><span class="Other">,</span> <span class="Identifier">csfo_PAL_L1_Id_L2</span><span class="Other">,</span> <span class="Identifier">csfo_PAL_L1_L2_Id</span><span class="Other">,</span>
+  <span class="Identifier">csfo_Id_PAL_L1_L2</span><span class="Other">,</span> <span class="Identifier">csfo_Id_PAL_L2_L1</span><span class="Other">,</span> <span class="Identifier">csfo_L1_PAL_Id_L2</span><span class="Other">,</span> <span class="Identifier">csfo_L1_PAL_L2_Id</span><span class="Other">,</span>
+  <span class="Identifier">csfo_Id_L1_PAL_L2</span><span class="Other">,</span> <span class="Identifier">csfo_Id_L2_PAL_L1</span><span class="Other">,</span> <span class="Identifier">csfo_L1_Id_PAL_L2</span><span class="Other">,</span> <span class="Identifier">csfo_L1_L2_PAL_Id</span><span class="Other">,</span>
+  <span class="Identifier">csfo_Id_L1_L2_PAL</span><span class="Other">,</span> <span class="Identifier">csfo_Id_L2_L1_PAL</span><span class="Other">,</span> <span class="Identifier">csfo_L1_Id_L2_PAL</span><span class="Other">,</span> <span class="Identifier">csfo_L1_L2_Id_PAL</span></pre></dt>
+  <dd>
+    
+    Id, length 1, or PAL, prepend_append_lengths, can come first
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L267" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L267" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -200,13 +286,13 @@
     <span class="Identifier">val_char_4</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">char</span><span class="Other">]</span>
   <span class="Keyword">of</span> <span class="Identifier">fkByteSeq</span><span class="Other">:</span>
     <span class="Identifier">val_byte_seq</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span>
-  <span class="Identifier">bool_from_byte</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">read_byte</span><span class="Other">:</span> <span class="Identifier">byte</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Operator">:anonymous_1140851213</span>
-  <span class="Identifier">bool_to_byte</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">write_bool</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">byte</span> <span class="Other">=</span> <span class="Operator">:anonymous_1140851219</span></pre></dt>
+  <span class="Identifier">bool_from_byte</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">read_byte</span><span class="Other">:</span> <span class="Identifier">byte</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Operator">:anonymous_1140851225</span>
+  <span class="Identifier">bool_to_byte</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">write_bool</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">byte</span> <span class="Other">=</span> <span class="Operator">:anonymous_1140851231</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L117" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L117" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L134" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L134" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -217,8 +303,23 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L100" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L100" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L117" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L117" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="PositionedField">
+  <dt><pre><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">field</span><span class="Operator">*</span><span class="Other">:</span> <a href="settings.html#Field"><span class="Identifier">Field</span></a>              <span class="Comment">## false will position field from start of data length, true will position from end</span>
+  <span class="Identifier">from_end</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Comment">## shifts forward when `from_end` is false, shifts back when `from_end` is true</span>
+                  <span class="Comment">## if `from_end`, length of `field` is accounted for using length of field.mapping.mapping</span>
+                  <span class="Comment">## always in bytes</span>
+  <span class="Identifier">offset</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L243" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L243" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -235,8 +336,8 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L28" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L28" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L29" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L29" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -246,8 +347,8 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L32" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L32" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L33" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L33" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -260,8 +361,8 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L192" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L192" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L215" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L215" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -273,8 +374,8 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L57" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L57" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L66" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L66" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -287,8 +388,8 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L36" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L36" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L37" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L37" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -301,19 +402,30 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L142" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L142" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L159" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L159" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="parse_field,ptr.UncheckedArray[byte],int,Field">
-  <dt><pre><span class="Keyword">proc</span> <a href="#parse_field%2Cptr.UncheckedArray%5Bbyte%5D%2Cint%2CField"><span class="Identifier">parse_field</span></a><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">length</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">field</span><span class="Other">:</span> <a href="settings.html#Field"><span class="Identifier">Field</span></a><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#Field"><span class="Identifier">Field</span></a> {.
+<div id="parse_field,ptr.UncheckedArray[byte],Field">
+  <dt><pre><span class="Keyword">proc</span> <a href="#parse_field%2Cptr.UncheckedArray%5Bbyte%5D%2CField"><span class="Identifier">parse_field</span></a><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">field</span><span class="Other">:</span> <a href="settings.html#Field"><span class="Identifier">Field</span></a><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#Field"><span class="Identifier">Field</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L167" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L167" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L190" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L190" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="parse_field,ByteSection,PositionedField">
+  <dt><pre><span class="Keyword">proc</span> <a href="#parse_field%2CByteSection%2CPositionedField"><span class="Identifier">parse_field</span></a><span class="Other">(</span><span class="Identifier">section</span><span class="Other">:</span> <a href="settings.html#ByteSection"><span class="Identifier">ByteSection</span></a><span class="Other">;</span> <span class="Identifier">pf</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#Field"><span class="Identifier">Field</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L252" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L252" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -325,8 +437,56 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L49" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L49" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L50" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L50" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="to_int,ptr.UncheckedArray[byte],int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#to_int%2Cptr.UncheckedArray%5Bbyte%5D%2Cint"><span class="Identifier">to_int</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">SomeInteger</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">length</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L58" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L58" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="write_field-procs-all">
+  <div id="write_field,ptr.UncheckedArray[byte],Field">
+  <dt><pre><span class="Keyword">proc</span> <a href="#write_field%2Cptr.UncheckedArray%5Bbyte%5D%2CField"><span class="Identifier">write_field</span></a><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">field</span><span class="Other">:</span> <a href="settings.html#Field"><span class="Identifier">Field</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">void</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L233" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L233" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="write_field,ByteSection,PositionedField">
+  <dt><pre><span class="Keyword">proc</span> <a href="#write_field%2CByteSection%2CPositionedField"><span class="Identifier">write_field</span></a><span class="Other">(</span><span class="Identifier">section</span><span class="Other">:</span> <a href="settings.html#ByteSection"><span class="Identifier">ByteSection</span></a><span class="Other">;</span> <span class="Identifier">pf</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">void</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L259" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L259" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="write_int-procs-all">
+  <div id="write_int,T,ptr.UncheckedArray[byte]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#write_int%2CT%2Cptr.UncheckedArray%5Bbyte%5D"><span class="Identifier">write_int</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">SomeInteger</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">integer</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">void</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L73" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L73" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -345,8 +505,8 @@
   <dd>
     
     
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L11" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L11" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L12" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L12" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -362,7 +522,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-09 23:37:14 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-09 23:57:41 UTC</small>
       </div>
     </div>
   </div>
