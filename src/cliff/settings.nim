@@ -7,7 +7,7 @@ type
         # size*: int
         # mapping*: ptr UncheckedArray[int]
         mapping*: seq[int]
-        correct*: bool # true if all numbers are present
+        correct*: bool # true if all numbers `0..<len(mapping)` are present
 
 converter array_to_bytemapping*(arr: seq[int]): ByteMapping =
     var check: seq[bool] = newSeq[bool](len(arr))
@@ -264,30 +264,16 @@ proc write_field*(section: ByteSection, pf: PositionedField): void =
     write_field(cast[ptr UncheckedArray[byte]](cast[uint](section.data) + uint(offset)), pf.field)
 
 type
-    CSFieldOrder* = enum
-        ## Id, length 1, or PAL, prepend_append_lengths, can come first
-        csfo_PAL_Id_L1_L2,
-        csfo_PAL_Id_L2_L1,
-        csfo_PAL_L1_Id_L2,
-        csfo_PAL_L1_L2_Id,
-
-        csfo_Id_PAL_L1_L2,
-        csfo_Id_PAL_L2_L1,
-        csfo_L1_PAL_Id_L2,
-        csfo_L1_PAL_L2_Id,
-
-        csfo_Id_L1_PAL_L2,
-        csfo_Id_L2_PAL_L1,
-        csfo_L1_Id_PAL_L2,
-        csfo_L1_L2_PAL_Id,
-
-        csfo_Id_L1_L2_PAL,
-        csfo_Id_L2_L1_PAL,
-        csfo_L1_Id_L2_PAL,
-        csfo_L1_L2_Id_PAL,
-
     CliffSettings* = object
-        field_order *: CSFieldOrder
+        ## remaps the following list to set field processing order
+        ## [
+        ## ID   - identifier of the chunk type
+        ## VER  - version of the chunk type. can be useful for files which are themselves one chunk, that starts with a file wide version
+        ## LEN1 - length 1 of data
+        ## LEN2 - override length of data
+        ## ]
+        field_order *: ByteMapping
+
         ## fields, containing values and types, are passed in in `field_order` order, as the values are parsed
         ## the first proc gets no input, second gets one, third gets two, and fourth gets three
         ## crc gets all values
@@ -295,8 +281,10 @@ type
         ## once `prepend_append_lengths` is called
         ## all following procs will recieve a value for either the prepend (first three) or append (crc)
         field_id   *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
+        field_ver  *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
         field_len1 *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
         field_len2 *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
+        use_len2   *: proc (spf: seq[PositionedField], pal: Option[int]): bool
         prepend_append_lengths *: proc (spf: seq[PositionedField]): (int, int)
         ## always determined last
         field_crc  *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
