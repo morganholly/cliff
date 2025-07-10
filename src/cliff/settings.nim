@@ -282,6 +282,7 @@ type
         ## all following procs will recieve a value for either the prepend (first three) or append (crc)
         field_id   *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
         field_ver  *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
+        use_ver    *: proc (spf: seq[PositionedField], pal: Option[int]): bool
         field_len1 *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
         field_len2 *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
         use_len2   *: proc (spf: seq[PositionedField], pal: Option[int]): bool
