@@ -1,3 +1,5 @@
 ## Public interface to you library.
 
-import cliff/[settings]
+import cliff/[fields, settings, chunk]
+
+export fields, settings, chunk
