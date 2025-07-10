@@ -31,24 +31,7 @@ nim	ByteSection	cliff/settings.html#ByteSection	object ByteSection		239
 nim	PositionedField	cliff/settings.html#PositionedField	object PositionedField		243
 nim	parse_field	cliff/settings.html#parse_field,ByteSection,PositionedField	proc parse_field(section: ByteSection; pf: PositionedField): Field		252
 nim	write_field	cliff/settings.html#write_field,ByteSection,PositionedField	proc write_field(section: ByteSection; pf: PositionedField): void		259
-nim	csfo_PAL_Id_L1_L2	cliff/settings.html#csfo_PAL_Id_L1_L2	CSFieldOrder.csfo_PAL_Id_L1_L2		267
-nim	csfo_PAL_Id_L2_L1	cliff/settings.html#csfo_PAL_Id_L2_L1	CSFieldOrder.csfo_PAL_Id_L2_L1		267
-nim	csfo_PAL_L1_Id_L2	cliff/settings.html#csfo_PAL_L1_Id_L2	CSFieldOrder.csfo_PAL_L1_Id_L2		267
-nim	csfo_PAL_L1_L2_Id	cliff/settings.html#csfo_PAL_L1_L2_Id	CSFieldOrder.csfo_PAL_L1_L2_Id		267
-nim	csfo_Id_PAL_L1_L2	cliff/settings.html#csfo_Id_PAL_L1_L2	CSFieldOrder.csfo_Id_PAL_L1_L2		267
-nim	csfo_Id_PAL_L2_L1	cliff/settings.html#csfo_Id_PAL_L2_L1	CSFieldOrder.csfo_Id_PAL_L2_L1		267
-nim	csfo_L1_PAL_Id_L2	cliff/settings.html#csfo_L1_PAL_Id_L2	CSFieldOrder.csfo_L1_PAL_Id_L2		267
-nim	csfo_L1_PAL_L2_Id	cliff/settings.html#csfo_L1_PAL_L2_Id	CSFieldOrder.csfo_L1_PAL_L2_Id		267
-nim	csfo_Id_L1_PAL_L2	cliff/settings.html#csfo_Id_L1_PAL_L2	CSFieldOrder.csfo_Id_L1_PAL_L2		267
-nim	csfo_Id_L2_PAL_L1	cliff/settings.html#csfo_Id_L2_PAL_L1	CSFieldOrder.csfo_Id_L2_PAL_L1		267
-nim	csfo_L1_Id_PAL_L2	cliff/settings.html#csfo_L1_Id_PAL_L2	CSFieldOrder.csfo_L1_Id_PAL_L2		267
-nim	csfo_L1_L2_PAL_Id	cliff/settings.html#csfo_L1_L2_PAL_Id	CSFieldOrder.csfo_L1_L2_PAL_Id		267
-nim	csfo_Id_L1_L2_PAL	cliff/settings.html#csfo_Id_L1_L2_PAL	CSFieldOrder.csfo_Id_L1_L2_PAL		267
-nim	csfo_Id_L2_L1_PAL	cliff/settings.html#csfo_Id_L2_L1_PAL	CSFieldOrder.csfo_Id_L2_L1_PAL		267
-nim	csfo_L1_Id_L2_PAL	cliff/settings.html#csfo_L1_Id_L2_PAL	CSFieldOrder.csfo_L1_Id_L2_PAL		267
-nim	csfo_L1_L2_Id_PAL	cliff/settings.html#csfo_L1_L2_Id_PAL	CSFieldOrder.csfo_L1_L2_Id_PAL		267
-nim	CSFieldOrder	cliff/settings.html#CSFieldOrder	enum CSFieldOrder		267
-nim	CliffSettings	cliff/settings.html#CliffSettings	object CliffSettings		289
+nim	CliffSettings	cliff/settings.html#CliffSettings	object CliffSettings		267
 nimgrp	parsefield	cliff/settings.html#parse_field-procs-all	proc		159
 nimgrp	toint	cliff/settings.html#to_int-procs-all	proc		50
 nimgrp	writefield	cliff/settings.html#write_field-procs-all	proc		233

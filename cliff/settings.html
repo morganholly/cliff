@@ -62,23 +62,22 @@
   data*: ptr UncheckedArray[byte]
   length*: int">ByteSection</a></li>
 <li><a class="reference" href="#CliffSettings" title="CliffSettings = object
-  field_order*: CSFieldOrder ## fields, containing values and types, are passed in in `field_order` order, as the values are parsed
-                             ## the first proc gets no input, second gets one, third gets two, and fourth gets three
-                             ## crc gets all values
-                             ## 
-                             ## once `prepend_append_lengths` is called
-                             ## all following procs will recieve a value for either the prepend (first three) or append (crc)
+  field_order*: ByteMapping ## fields, containing values and types, are passed in in `field_order` order, as the values are parsed
+                            ## the first proc gets no input, second gets one, third gets two, and fourth gets three
+                            ## crc gets all values
+                            ## 
+                            ## once `prepend_append_lengths` is called
+                            ## all following procs will recieve a value for either the prepend (first three) or append (crc)
   field_id*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
+  field_ver*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
+  use_ver*: proc (spf: seq[PositionedField]; pal: Option[int]): bool
   field_len1*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
   field_len2*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
+  use_len2*: proc (spf: seq[PositionedField]; pal: Option[int]): bool
   prepend_append_lengths*: proc (spf: seq[PositionedField]): (int, int) ## always determined last
   field_crc*: proc (spf: seq[PositionedField]; pal: Option[int]): PositionedField
-  crc_after_data*: bool">CliffSettings</a></li>
-<li><a class="reference" href="#CSFieldOrder" title="CSFieldOrder = enum
-  csfo_PAL_Id_L1_L2, csfo_PAL_Id_L2_L1, csfo_PAL_L1_Id_L2, csfo_PAL_L1_L2_Id,
-  csfo_Id_PAL_L1_L2, csfo_Id_PAL_L2_L1, csfo_L1_PAL_Id_L2, csfo_L1_PAL_L2_Id,
-  csfo_Id_L1_PAL_L2, csfo_Id_L2_PAL_L1, csfo_L1_Id_PAL_L2, csfo_L1_L2_PAL_Id,
-  csfo_Id_L1_L2_PAL, csfo_Id_L2_L1_PAL, csfo_L1_Id_L2_PAL, csfo_L1_L2_Id_PAL">CSFieldOrder</a></li>
+  use_crc*: proc (spf: seq[PositionedField]; pal: Option[int]): bool
+  crc_after*: proc (spf: seq[PositionedField]; pal: Option[int]): bool">CliffSettings</a></li>
 <li><a class="reference" href="#Field" title="Field = object
   mapping*: ByteMapping
   inverse*: ByteMapping
@@ -221,35 +220,25 @@
 </div>
 <div id="CliffSettings">
   <dt><pre><a href="settings.html#CliffSettings"><span class="Identifier">CliffSettings</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Identifier">field_order</span><span class="Operator">*</span><span class="Other">:</span> <a href="settings.html#CSFieldOrder"><span class="Identifier">CSFieldOrder</span></a> <span class="Comment">## fields, containing values and types, are passed in in `field_order` order, as the values are parsed</span>
-                             <span class="Comment">## the first proc gets no input, second gets one, third gets two, and fourth gets three</span>
-                             <span class="Comment">## crc gets all values</span>
-                             <span class="Comment">## </span>
-                             <span class="Comment">## once `prepend_append_lengths` is called</span>
-                             <span class="Comment">## all following procs will recieve a value for either the prepend (first three) or append (crc)</span>
+  <span class="Identifier">field_order</span><span class="Operator">*</span><span class="Other">:</span> <a href="settings.html#ByteMapping"><span class="Identifier">ByteMapping</span></a> <span class="Comment">## fields, containing values and types, are passed in in `field_order` order, as the values are parsed</span>
+                            <span class="Comment">## the first proc gets no input, second gets one, third gets two, and fourth gets three</span>
+                            <span class="Comment">## crc gets all values</span>
+                            <span class="Comment">## </span>
+                            <span class="Comment">## once `prepend_append_lengths` is called</span>
+                            <span class="Comment">## all following procs will recieve a value for either the prepend (first three) or append (crc)</span>
   <span class="Identifier">field_id</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
+  <span class="Identifier">field_ver</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
+  <span class="Identifier">use_ver</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">field_len1</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
   <span class="Identifier">field_len2</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
+  <span class="Identifier">use_len2</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">prepend_append_lengths</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Other">(</span><span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Comment">## always determined last</span>
   <span class="Identifier">field_crc</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a>
-  <span class="Identifier">crc_after_data</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
+  <span class="Identifier">use_crc</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">crc_after</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">spf</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="settings.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pal</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
   <dd>
     
-    
-    <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L289" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L289" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="CSFieldOrder">
-  <dt><pre><a href="settings.html#CSFieldOrder"><span class="Identifier">CSFieldOrder</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">csfo_PAL_Id_L1_L2</span><span class="Other">,</span> <span class="Identifier">csfo_PAL_Id_L2_L1</span><span class="Other">,</span> <span class="Identifier">csfo_PAL_L1_Id_L2</span><span class="Other">,</span> <span class="Identifier">csfo_PAL_L1_L2_Id</span><span class="Other">,</span>
-  <span class="Identifier">csfo_Id_PAL_L1_L2</span><span class="Other">,</span> <span class="Identifier">csfo_Id_PAL_L2_L1</span><span class="Other">,</span> <span class="Identifier">csfo_L1_PAL_Id_L2</span><span class="Other">,</span> <span class="Identifier">csfo_L1_PAL_L2_Id</span><span class="Other">,</span>
-  <span class="Identifier">csfo_Id_L1_PAL_L2</span><span class="Other">,</span> <span class="Identifier">csfo_Id_L2_PAL_L1</span><span class="Other">,</span> <span class="Identifier">csfo_L1_Id_PAL_L2</span><span class="Other">,</span> <span class="Identifier">csfo_L1_L2_PAL_Id</span><span class="Other">,</span>
-  <span class="Identifier">csfo_Id_L1_L2_PAL</span><span class="Other">,</span> <span class="Identifier">csfo_Id_L2_L1_PAL</span><span class="Other">,</span> <span class="Identifier">csfo_L1_Id_L2_PAL</span><span class="Other">,</span> <span class="Identifier">csfo_L1_L2_Id_PAL</span></pre></dt>
-  <dd>
-    
-    Id, length 1, or PAL, prepend_append_lengths, can come first
+    remaps the following list to set field processing order <a class="reference internal" href="# ID   - identifier of the chunk type VER  - version of the chunk type. can be useful for files which are themselves one chunk, that starts with a file wide version LEN1 - length 1 of data LEN2 - override length of data "> ID   - identifier of the chunk type VER  - version of the chunk type. can be useful for files which are themselves one chunk, that starts with a file wide version LEN1 - length 1 of data LEN2 - override length of data </a>
     <a href="https://github.com/morganholly/cliff/tree/master/src/cliff/settings.nim#L267" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/morganholly/cliff/edit/devel/src/cliff/settings.nim#L267" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -522,7 +511,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-09 23:57:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-10 00:27:28 UTC</small>
       </div>
     </div>
   </div>
