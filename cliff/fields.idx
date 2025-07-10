@@ -1,0 +1,37 @@
+nimTitle	fields	cliff/fields.html	module src/cliff/fields		0
+nim	ByteMapping	cliff/fields.html#ByteMapping	object ByteMapping		6
+nim	array_to_bytemapping	cliff/fields.html#array_to_bytemapping.c,seq[int]	converter array_to_bytemapping(arr: seq[int]): ByteMapping		12
+nim	bytemap	cliff/fields.html#bytemap,openArray[byte],ByteMapping	proc bytemap(data: openArray[byte]; bm: ByteMapping): seq[byte]		29
+nim	bytemap	cliff/fields.html#bytemap,ptr.UncheckedArray[byte],ByteMapping	proc bytemap(data: ptr UncheckedArray[byte]; bm: ByteMapping): seq[byte]		33
+nim	make_inverse	cliff/fields.html#make_inverse,ByteMapping	proc make_inverse(bm: ByteMapping): Option[ByteMapping]		37
+nim	to_int	cliff/fields.html#to_int,openArray[byte]	proc to_int[T: SomeInteger](data: openArray[byte]): T		50
+nim	to_int	cliff/fields.html#to_int,ptr.UncheckedArray[byte],int	proc to_int[T: SomeInteger](data: ptr UncheckedArray[byte]; length: int): T		58
+nim	from_int	cliff/fields.html#from_int,T	proc from_int[T: SomeInteger](integer: T): seq[byte]		66
+nim	write_int	cliff/fields.html#write_int,T,ptr.UncheckedArray[byte]	proc write_int[T: SomeInteger](integer: T; data: ptr UncheckedArray[byte]): void		73
+nim	fkBool	cliff/fields.html#fkBool	FieldKind.fkBool		117
+nim	fkInt8	cliff/fields.html#fkInt8	FieldKind.fkInt8		117
+nim	fkInt16	cliff/fields.html#fkInt16	FieldKind.fkInt16		117
+nim	fkInt32	cliff/fields.html#fkInt32	FieldKind.fkInt32		117
+nim	fkInt64	cliff/fields.html#fkInt64	FieldKind.fkInt64		117
+nim	fkUInt8	cliff/fields.html#fkUInt8	FieldKind.fkUInt8		117
+nim	fkUInt16	cliff/fields.html#fkUInt16	FieldKind.fkUInt16		117
+nim	fkUInt32	cliff/fields.html#fkUInt32	FieldKind.fkUInt32		117
+nim	fkUInt64	cliff/fields.html#fkUInt64	FieldKind.fkUInt64		117
+nim	fkFloat32	cliff/fields.html#fkFloat32	FieldKind.fkFloat32		117
+nim	fkFloat64	cliff/fields.html#fkFloat64	FieldKind.fkFloat64		117
+nim	fkChar4	cliff/fields.html#fkChar4	FieldKind.fkChar4		117
+nim	fkByteSeq	cliff/fields.html#fkByteSeq	FieldKind.fkByteSeq		117
+nim	FieldKind	cliff/fields.html#FieldKind	enum FieldKind		117
+nim	Field	cliff/fields.html#Field	object Field		134
+nim	parse_field	cliff/fields.html#parse_field,openArray[byte],Field	proc parse_field(data: openArray[byte]; field: Field): Field		159
+nim	parse_field	cliff/fields.html#parse_field,ptr.UncheckedArray[byte],Field	proc parse_field(data: ptr UncheckedArray[byte]; field: Field): Field		190
+nim	field_to_bytes	cliff/fields.html#field_to_bytes,Field	proc field_to_bytes(field: Field): seq[byte]		215
+nim	write_field	cliff/fields.html#write_field,ptr.UncheckedArray[byte],Field	proc write_field(data: ptr UncheckedArray[byte]; field: Field): void		233
+nim	ByteSection	cliff/fields.html#ByteSection	object ByteSection		239
+nim	PositionedField	cliff/fields.html#PositionedField	object PositionedField		243
+nim	parse_field	cliff/fields.html#parse_field,ByteSection,PositionedField	proc parse_field(section: ByteSection; pf: PositionedField): Field		252
+nim	write_field	cliff/fields.html#write_field,ByteSection,PositionedField	proc write_field(section: ByteSection; pf: PositionedField): void		259
+nimgrp	parsefield	cliff/fields.html#parse_field-procs-all	proc		159
+nimgrp	toint	cliff/fields.html#to_int-procs-all	proc		50
+nimgrp	writefield	cliff/fields.html#write_field-procs-all	proc		233
+nimgrp	bytemap	cliff/fields.html#bytemap-procs-all	proc		29
