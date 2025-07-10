@@ -288,4 +288,5 @@ type
         prepend_append_lengths *: proc (spf: seq[PositionedField]): (int, int)
         ## always determined last
         field_crc  *: proc (spf: seq[PositionedField], pal: Option[int]): PositionedField
-        crc_after_data *: bool
+        use_crc    *: proc (spf: seq[PositionedField], pal: Option[int]): bool
+        crc_after  *: proc (spf: seq[PositionedField], pal: Option[int]): bool
