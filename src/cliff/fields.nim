@@ -114,41 +114,41 @@ block:
     discard
 
 type
-    FieldKind* = enum
-        fkBool,
-        fkInt8,
-        fkInt16,
-        fkInt32,
-        fkInt64,
+    VariantKind* = enum
+        vkBool,
+        vkInt8,
+        vkInt16,
+        vkInt32,
+        vkInt64,
         # higher bit sizes not implemented yet
-        fkUInt8,
-        fkUInt16,
-        fkUInt32,
-        fkUInt64,
+        vkUInt8,
+        vkUInt16,
+        vkUInt32,
+        vkUInt64,
         # higher bit sizes not implemented yet
-        fkFloat32,
-        fkFloat64,
-        fkChar4,
-        fkByteSeq
+        vkFloat32,
+        vkFloat64,
+        vkByteSeq
+
+    Variant* = object
+        case kind *: VariantKind:
+            of vkBool:    val_bool *: bool
+            of vkInt8:    val_int_8    *: int8
+            of vkInt16:   val_int_16   *: int16
+            of vkInt32:   val_int_32   *: int32
+            of vkInt64:   val_int_64   *: int64
+            of vkUInt8:   val_uint_8   *: uint8
+            of vkUInt16:  val_uint_16  *: uint16
+            of vkUInt32:  val_uint_32  *: uint32
+            of vkUInt64:  val_uint_64  *: uint64
+            of vkFloat32: val_float_32 *: float32
+            of vkFloat64: val_float_64 *: float64
+            of vkByteSeq: val_byte_seq *: seq[byte]
 
     Field* = object
+        variant *: Variant
         mapping *: ByteMapping
         inverse *: ByteMapping
-        case kind *: FieldKind:
-            of fkBool:
-                val_bool *: bool
-            of fkInt8:    val_int_8    *: int8
-            of fkInt16:   val_int_16   *: int16
-            of fkInt32:   val_int_32   *: int32
-            of fkInt64:   val_int_64   *: int64
-            of fkUInt8:   val_uint_8   *: uint8
-            of fkUInt16:  val_uint_16  *: uint16
-            of fkUInt32:  val_uint_32  *: uint32
-            of fkUInt64:  val_uint_64  *: uint64
-            of fkFloat32: val_float_32 *: float32
-            of fkFloat64: val_float_64 *: float64
-            of fkChar4:   val_char_4   *: array[4, char]
-            of fkByteSeq: val_byte_seq *: seq[byte]
         # one file might store 0x00 for false and 0x01 for true
         # while another *could* store 0x00-0x7E for false and 0x7F-0xFF for true
         # which would offer increased resistance to corruption
@@ -161,29 +161,28 @@ proc parse_field*(data: openArray[byte], field: Field): Field =
     result = Field(
         mapping: field.mapping,
         inverse: field.inverse,
-        kind: field.kind
+        variant: Variant(kind: field.variant.kind)
     )
     let remapped = bytemap(data, field.mapping)
-    case field.kind:
-        of fkBool:    result.val_bool     = field.bool_from_byte(remapped[0])
-        of fkInt8:    result.val_int_8    = cast[int8](remapped[0])
-        of fkInt16:   result.val_int_16   = to_int[int16](remapped)
-        of fkInt32:   result.val_int_32   = to_int[int32](remapped)
-        of fkInt64:   result.val_int_64   = to_int[int64](remapped)
-        of fkUInt8:   result.val_uint_8   = remapped[0]
-        of fkUInt16:  result.val_uint_16  = to_int[uint16](remapped)
-        of fkUInt32:  result.val_uint_32  = to_int[uint32](remapped)
-        of fkUInt64:  result.val_uint_64  = to_int[uint64](remapped)
-        of fkFloat32: result.val_float_32 = cast[float32](to_int[uint32](remapped))
-        of fkFloat64: result.val_float_64 = cast[float64](to_int[uint64](remapped))
-        of fkChar4:   result.val_char_4   = [cast[char](remapped[0]), cast[char](remapped[1]), cast[char](remapped[2]), cast[char](remapped[3])]
-        of fkByteSeq: result.val_byte_seq = @remapped
+    case field.variant.kind:
+        of vkBool:    result.variant.val_bool     =           field.bool_from_byte(remapped[0])
+        of vkInt8:    result.variant.val_int_8    =                     cast[int8](remapped[0])
+        of vkInt16:   result.variant.val_int_16   =                  to_int[int16](remapped)
+        of vkInt32:   result.variant.val_int_32   =                  to_int[int32](remapped)
+        of vkInt64:   result.variant.val_int_64   =                  to_int[int64](remapped)
+        of vkUInt8:   result.variant.val_uint_8   =                                remapped[0]
+        of vkUInt16:  result.variant.val_uint_16  =                 to_int[uint16](remapped)
+        of vkUInt32:  result.variant.val_uint_32  =                 to_int[uint32](remapped)
+        of vkUInt64:  result.variant.val_uint_64  =                 to_int[uint64](remapped)
+        of vkFloat32: result.variant.val_float_32 =   cast[float32](to_int[uint32](remapped))
+        of vkFloat64: result.variant.val_float_64 =   cast[float64](to_int[uint64](remapped))
+        of vkByteSeq: result.variant.val_byte_seq =                               @remapped
     # case field.kind:
-    #     of fkBool, fkInt8, fkUInt8:               result.length = 1
-    #     of fkInt16, fkUInt16:                     result.length = 2
-    #     of fkInt32, fkUInt32, fkFloat32, fkChar4: result.length = 4
-    #     of fkInt64, fkUInt64, fkFloat64:          result.length = 8
-    #     of fkByteSeq:                             result.length = len(remapped)
+    #     of vkBool, vkInt8, vkUInt8:               result.length = 1
+    #     of vkInt16, vkUInt16:                     result.length = 2
+    #     of vkInt32, vkUInt32, vkFloat32, vkChar4: result.length = 4
+    #     of vkInt64, vkUInt64, vkFloat64:          result.length = 8
+    #     of vkByteSeq:                             result.length = len(remapped)
     result.bool_from_byte = field.bool_from_byte
     result.bool_to_byte   = field.bool_to_byte
 
@@ -192,42 +191,40 @@ proc parse_field*(data: ptr UncheckedArray[byte], field: Field): Field =
     result = Field(
         mapping: field.mapping,
         inverse: field.inverse,
-        kind: field.kind
+        variant: Variant(kind: field.variant.kind)
     )
     let remapped = bytemap(data, field.mapping)
-    case field.kind:
-        of fkBool:    result.val_bool     = field.bool_from_byte(remapped[0])
-        of fkInt8:    result.val_int_8    = cast[int8](remapped[0])
-        of fkInt16:   result.val_int_16   = to_int[int16](remapped)
-        of fkInt32:   result.val_int_32   = to_int[int32](remapped)
-        of fkInt64:   result.val_int_64   = to_int[int64](remapped)
-        of fkUInt8:   result.val_uint_8   = remapped[0]
-        of fkUInt16:  result.val_uint_16  = to_int[uint16](remapped)
-        of fkUInt32:  result.val_uint_32  = to_int[uint32](remapped)
-        of fkUInt64:  result.val_uint_64  = to_int[uint64](remapped)
-        of fkFloat32: result.val_float_32 = cast[float32](to_int[uint32](remapped))
-        of fkFloat64: result.val_float_64 = cast[float64](to_int[uint64](remapped))
-        of fkChar4:   result.val_char_4   = [cast[char](remapped[0]), cast[char](remapped[1]), cast[char](remapped[2]), cast[char](remapped[3])]
-        of fkByteSeq: result.val_byte_seq = @remapped
+    case field.variant.kind:
+        of vkBool:    result.variant.val_bool     =           field.bool_from_byte(remapped[0])
+        of vkInt8:    result.variant.val_int_8    =                     cast[int8](remapped[0])
+        of vkInt16:   result.variant.val_int_16   =                  to_int[int16](remapped)
+        of vkInt32:   result.variant.val_int_32   =                  to_int[int32](remapped)
+        of vkInt64:   result.variant.val_int_64   =                  to_int[int64](remapped)
+        of vkUInt8:   result.variant.val_uint_8   =                                remapped[0]
+        of vkUInt16:  result.variant.val_uint_16  =                 to_int[uint16](remapped)
+        of vkUInt32:  result.variant.val_uint_32  =                 to_int[uint32](remapped)
+        of vkUInt64:  result.variant.val_uint_64  =                 to_int[uint64](remapped)
+        of vkFloat32: result.variant.val_float_32 =   cast[float32](to_int[uint32](remapped))
+        of vkFloat64: result.variant.val_float_64 =   cast[float64](to_int[uint64](remapped))
+        of vkByteSeq: result.variant.val_byte_seq =                               @remapped
     result.bool_from_byte = field.bool_from_byte
     result.bool_to_byte   = field.bool_to_byte
 
 proc field_to_bytes*(field: Field): seq[byte] =
     var unremapped: seq[byte]
-    case field.kind:
-        of fkBool:    unremapped &= field.bool_to_byte(field.val_bool)
-        of fkInt8:    unremapped &= cast[byte](field.val_int_8)
-        of fkInt16:   unremapped  = from_int[int16](field.val_int_16)
-        of fkInt32:   unremapped  = from_int[int32](field.val_int_32)
-        of fkInt64:   unremapped  = from_int[int64](field.val_int_64)
-        of fkUInt8:   unremapped &= cast[byte](field.val_uint_8)
-        of fkUInt16:  unremapped  = from_int[uint16](field.val_uint_16)
-        of fkUInt32:  unremapped  = from_int[uint32](field.val_uint_32)
-        of fkUInt64:  unremapped  = from_int[uint64](field.val_uint_64)
-        of fkFloat32: unremapped  = from_int[uint32](cast[uint32](field.val_uint_32))
-        of fkFloat64: unremapped  = from_int[uint64](cast[uint64](field.val_uint_64))
-        of fkChar4:   unremapped  = @[cast[byte](field.val_char_4[0]), cast[byte](field.val_char_4[1]), cast[byte](field.val_char_4[2]), cast[byte](field.val_char_4[3])]
-        of fkByteSeq: unremapped  = field.val_byte_seq
+    case field.variant.kind:
+        of vkBool:    unremapped &=             field.bool_to_byte(field.variant.val_bool)
+        of vkInt8:    unremapped &=                     cast[byte](field.variant.val_int_8)
+        of vkInt16:   unremapped  =                from_int[int16](field.variant.val_int_16)
+        of vkInt32:   unremapped  =                from_int[int32](field.variant.val_int_32)
+        of vkInt64:   unremapped  =                from_int[int64](field.variant.val_int_64)
+        of vkUInt8:   unremapped &=                     cast[byte](field.variant.val_uint_8)
+        of vkUInt16:  unremapped  =               from_int[uint16](field.variant.val_uint_16)
+        of vkUInt32:  unremapped  =               from_int[uint32](field.variant.val_uint_32)
+        of vkUInt64:  unremapped  =               from_int[uint64](field.variant.val_uint_64)
+        of vkFloat32: unremapped  =  from_int[uint32](cast[uint32](field.variant.val_uint_32))
+        of vkFloat64: unremapped  =  from_int[uint64](cast[uint64](field.variant.val_uint_64))
+        of vkByteSeq: unremapped  =                                field.variant.val_byte_seq
     return bytemap(unremapped, field.inverse)
 
 proc write_field*(data: ptr UncheckedArray[byte], field: Field): void =
