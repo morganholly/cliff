@@ -38,6 +38,9 @@ type
         data_len_offset *: int
         data_len_scale2 *: int
 
+proc static_field*(pf: PositionedField): proc (fields: seq[Option[Variant]]): Option[PositionedField] =
+    return proc (fields: seq[Option[Variant]]): Option[PositionedField] = return some(pf)
+
 type
     CliffSettingsV2* = object
         fields_prepend *: seq[proc (fields: seq[Option[Variant]]): Option[PositionedField]]

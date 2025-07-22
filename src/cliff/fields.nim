@@ -9,6 +9,12 @@ type
         mapping*: seq[int]
         correct*: bool # true if all numbers `0..<len(mapping)` are present
 
+proc unit_mapping_n*(n: uint): ByteMapping =
+    result.mapping = newSeqOfCap[int](int(n))
+    for i in 0..<n:
+        result.mapping[i] = i
+    result.correct = true
+
 converter array_to_bytemapping*(arr: seq[int]): ByteMapping =
     var check: seq[bool] = newSeq[bool](len(arr))
     result = ByteMapping(
