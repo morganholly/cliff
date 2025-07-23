@@ -1,7 +1,7 @@
 ## Put your tests here.
 
 import cliff
-import strutils, sets
+import strutils, sets, options
 # import pkg/colors
 
 proc `&=`(sbyte: var seq[byte], schar: seq[char]) =
@@ -92,7 +92,7 @@ proc print_byte_line(bytes: openArray[byte], num_filled: int) =
             stdout.write("-- ")
     echo()
 
-proc print_bytes(bytes: openArray[byte])=
+proc print_bytes(bytes: openArray[byte]) =
     var line_buffer: array[16, byte]
     var j: int
     for i in 0..<len(bytes):
@@ -103,7 +103,33 @@ proc print_bytes(bytes: openArray[byte])=
             j = 0
             line_buffer = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     print_byte_line(line_buffer, j)
-    echo()
     echo(len(bytes))
 
+proc print_bytes(bytes: ByteSection) =
+    var line_buffer: array[16, byte]
+    var j: int
+    for i in 0..<bytes.length:
+        line_buffer[j] = bytes.data[i]
+        j += 1
+        if j >= len(line_buffer):
+            print_byte_line(line_buffer)
+            j = 0
+            line_buffer = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    print_byte_line(line_buffer, j)
+    echo(bytes.length)
+
 print_bytes(test_bytes_1)
+
+var data_ptr = cast[ptr UncheckedArray[byte]](alloc0(len(test_bytes_1)))
+for i in 0..<len(test_bytes_1):
+    data_ptr[i] = test_bytes_1[i]
+
+var chunk: CliffChunkRaw = test_settings_1.parse_chunk(ByteSection(data: data_ptr, length: len(test_bytes_1)))
+
+print_bytes(chunk.prepend)
+print_bytes(chunk.data)
+print_bytes(chunk.append)
+
+echo(chunk.id)
+echo(chunk.lens)
+echo(chunk.crc)

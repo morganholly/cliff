@@ -12,7 +12,7 @@ type
 proc unit_mapping_n*(n: uint): ByteMapping =
     result.mapping = newSeqOfCap[int](int(n))
     for i in 0..<n:
-        result.mapping[i] = i
+        result.mapping &= int(i)
     result.correct = true
 
 converter array_to_bytemapping*(arr: seq[int]): ByteMapping =
@@ -243,6 +243,26 @@ type
         data *: ptr UncheckedArray[byte]
         length *: int
 
+proc slide*(bs: ByteSection, move: int): ByteSection =
+    var new_ptr = cast[uint](bs.data)
+    if move >= 0:
+        new_ptr += uint(move)
+    else:
+        new_ptr -= uint(move)
+    return ByteSection(data: cast[ptr UncheckedArray[byte]](new_ptr), length: bs.length)
+
+proc subset*(bs: ByteSection, move_start_forward, move_end_forward: int): ByteSection =
+    var new_ptr = cast[uint](bs.data)
+    if move_start_forward >= 0:
+        new_ptr += uint(move_start_forward)
+    else:
+        new_ptr -= uint(move_start_forward)
+    return ByteSection(data: cast[ptr UncheckedArray[byte]](new_ptr), length: bs.length + move_end_forward - move_start_forward)
+
+proc newlength*(bs: ByteSection, length: int): ByteSection =
+    return ByteSection(data: bs.data, length: length)
+
+type
     PositionedField* = object
         field *: Field
         ## false will position field from start of data length, true will position from end
@@ -252,12 +272,12 @@ type
         ## always in bytes
         offset *: int
 
-proc parse_field*(section: ByteSection, pf: PositionedField): Field =
+proc parse_field*(section: ByteSection, pf: PositionedField): Variant =
     let offset: int = if pf.from_end:
                             section.length - (pf.offset + len(pf.field.mapping.mapping))
                         else:
                             pf.offset
-    return parse_field(cast[ptr UncheckedArray[byte]](cast[uint](section.data) + uint(offset)), pf.field)
+    return parse_field(cast[ptr UncheckedArray[byte]](cast[uint](section.data) + uint(offset)), pf.field).variant
 
 proc write_field*(section: ByteSection, pf: PositionedField): void =
     let offset: int = if pf.from_end:
