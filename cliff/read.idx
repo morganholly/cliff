@@ -1,0 +1,2 @@
+nimTitle	read	cliff/read.html	module src/cliff/read		0
+nim	parse_chunk	cliff/read.html#parse_chunk,CliffSettingsV2,ByteSection	proc parse_chunk(settings: CliffSettingsV2; data: ByteSection): CliffChunkRaw		4

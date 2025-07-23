@@ -25,7 +25,7 @@
   <div class="document" id="documentId">
     <div class="container">
       <h1 class="title">Index</h1>
-      Modules: <a href="cliff.html">cliff</a>, <a href="cliff/chunk.html">cliff/chunk</a>, <a href="cliff/fields.html">cliff/fields</a>, <a href="cliff/settings.html">cliff/settings</a>.<br/><p /><h2>API symbols</h2>
+      Modules: <a href="cliff.html">cliff</a>, <a href="cliff/chunk.html">cliff/chunk</a>, <a href="cliff/fields.html">cliff/fields</a>, <a href="cliff/read.html">cliff/read</a>, <a href="cliff/settings.html">cliff/settings</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="array_to_bytemapping" href="#array_to_bytemapping"><span>array_to_bytemapping:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="fields: converter array_to_bytemapping(arr: seq[int]): ByteMapping" href="cliff/fields.html#array_to_bytemapping.c%2Cseq%5Bint%5D">fields: converter array_to_bytemapping(arr: seq[int]): ByteMapping</a></li>
@@ -46,15 +46,19 @@
           </ul></dd>
 <dt><a name="CliffChunk" href="#CliffChunk"><span>CliffChunk:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="chunk: object CliffChunk" href="cliff/chunk.html#CliffChunk">chunk: object CliffChunk</a></li>
+          data-doc-search-tag="chunk: type CliffChunk" href="cliff/chunk.html#CliffChunk">chunk: type CliffChunk</a></li>
           </ul></dd>
 <dt><a name="CliffChunkRaw" href="#CliffChunkRaw"><span>CliffChunkRaw:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="chunk: object CliffChunkRaw" href="cliff/chunk.html#CliffChunkRaw">chunk: object CliffChunkRaw</a></li>
+          data-doc-search-tag="chunk: type CliffChunkRaw" href="cliff/chunk.html#CliffChunkRaw">chunk: type CliffChunkRaw</a></li>
           </ul></dd>
-<dt><a name="CliffSettings" href="#CliffSettings"><span>CliffSettings:</span></a></dt><dd><ul class="simple">
+<dt><a name="CliffSettingsV1" href="#CliffSettingsV1"><span>CliffSettingsV1:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="settings: object CliffSettings" href="cliff/settings.html#CliffSettings">settings: object CliffSettings</a></li>
+          data-doc-search-tag="settings: object CliffSettingsV1" href="cliff/settings.html#CliffSettingsV1">settings: object CliffSettingsV1</a></li>
+          </ul></dd>
+<dt><a name="CliffSettingsV2" href="#CliffSettingsV2"><span>CliffSettingsV2:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="settings: object CliffSettingsV2" href="cliff/settings.html#CliffSettingsV2">settings: object CliffSettingsV2</a></li>
           </ul></dd>
 <dt><a name="CSFieldOrderElement" href="#CSFieldOrderElement"><span>CSFieldOrderElement:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -64,65 +68,9 @@
 <li><a class="reference external"
           data-doc-search-tag="fields: object Field" href="cliff/fields.html#Field">fields: object Field</a></li>
           </ul></dd>
-<dt><a name="FieldKind" href="#FieldKind"><span>FieldKind:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: enum FieldKind" href="cliff/fields.html#FieldKind">fields: enum FieldKind</a></li>
-          </ul></dd>
 <dt><a name="field_to_bytes" href="#field_to_bytes"><span>field_to_bytes:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="fields: proc field_to_bytes(field: Field): seq[byte]" href="cliff/fields.html#field_to_bytes%2CField">fields: proc field_to_bytes(field: Field): seq[byte]</a></li>
-          </ul></dd>
-<dt><a name="fkBool" href="#fkBool"><span>fkBool:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkBool" href="cliff/fields.html#fkBool">fields: FieldKind.fkBool</a></li>
-          </ul></dd>
-<dt><a name="fkByteSeq" href="#fkByteSeq"><span>fkByteSeq:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkByteSeq" href="cliff/fields.html#fkByteSeq">fields: FieldKind.fkByteSeq</a></li>
-          </ul></dd>
-<dt><a name="fkChar4" href="#fkChar4"><span>fkChar4:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkChar4" href="cliff/fields.html#fkChar4">fields: FieldKind.fkChar4</a></li>
-          </ul></dd>
-<dt><a name="fkFloat32" href="#fkFloat32"><span>fkFloat32:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkFloat32" href="cliff/fields.html#fkFloat32">fields: FieldKind.fkFloat32</a></li>
-          </ul></dd>
-<dt><a name="fkFloat64" href="#fkFloat64"><span>fkFloat64:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkFloat64" href="cliff/fields.html#fkFloat64">fields: FieldKind.fkFloat64</a></li>
-          </ul></dd>
-<dt><a name="fkInt16" href="#fkInt16"><span>fkInt16:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkInt16" href="cliff/fields.html#fkInt16">fields: FieldKind.fkInt16</a></li>
-          </ul></dd>
-<dt><a name="fkInt32" href="#fkInt32"><span>fkInt32:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkInt32" href="cliff/fields.html#fkInt32">fields: FieldKind.fkInt32</a></li>
-          </ul></dd>
-<dt><a name="fkInt64" href="#fkInt64"><span>fkInt64:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkInt64" href="cliff/fields.html#fkInt64">fields: FieldKind.fkInt64</a></li>
-          </ul></dd>
-<dt><a name="fkInt8" href="#fkInt8"><span>fkInt8:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkInt8" href="cliff/fields.html#fkInt8">fields: FieldKind.fkInt8</a></li>
-          </ul></dd>
-<dt><a name="fkUInt16" href="#fkUInt16"><span>fkUInt16:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkUInt16" href="cliff/fields.html#fkUInt16">fields: FieldKind.fkUInt16</a></li>
-          </ul></dd>
-<dt><a name="fkUInt32" href="#fkUInt32"><span>fkUInt32:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkUInt32" href="cliff/fields.html#fkUInt32">fields: FieldKind.fkUInt32</a></li>
-          </ul></dd>
-<dt><a name="fkUInt64" href="#fkUInt64"><span>fkUInt64:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkUInt64" href="cliff/fields.html#fkUInt64">fields: FieldKind.fkUInt64</a></li>
-          </ul></dd>
-<dt><a name="fkUInt8" href="#fkUInt8"><span>fkUInt8:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="fields: FieldKind.fkUInt8" href="cliff/fields.html#fkUInt8">fields: FieldKind.fkUInt8</a></li>
           </ul></dd>
 <dt><a name="from_int" href="#from_int"><span>from_int:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -132,9 +80,17 @@
 <li><a class="reference external"
           data-doc-search-tag="fields: proc make_inverse(bm: ByteMapping): Option[ByteMapping]" href="cliff/fields.html#make_inverse%2CByteMapping">fields: proc make_inverse(bm: ByteMapping): Option[ByteMapping]</a></li>
           </ul></dd>
+<dt><a name="newlength" href="#newlength"><span>newlength:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: proc newlength(bs: ByteSection; length: int): ByteSection" href="cliff/fields.html#newlength%2CByteSection%2Cint">fields: proc newlength(bs: ByteSection; length: int): ByteSection</a></li>
+          </ul></dd>
+<dt><a name="parse_chunk" href="#parse_chunk"><span>parse_chunk:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="read: proc parse_chunk(settings: CliffSettingsV2; data: ByteSection): CliffChunkRaw" href="cliff/read.html#parse_chunk%2CCliffSettingsV2%2CByteSection">read: proc parse_chunk(settings: CliffSettingsV2; data: ByteSection): CliffChunkRaw</a></li>
+          </ul></dd>
 <dt><a name="parse_field" href="#parse_field"><span>parse_field:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="fields: proc parse_field(section: ByteSection; pf: PositionedField): Field" href="cliff/fields.html#parse_field%2CByteSection%2CPositionedField">fields: proc parse_field(section: ByteSection; pf: PositionedField): Field</a></li>
+          data-doc-search-tag="fields: proc parse_field(section: ByteSection; pf: PositionedField): Variant" href="cliff/fields.html#parse_field%2CByteSection%2CPositionedField">fields: proc parse_field(section: ByteSection; pf: PositionedField): Variant</a></li>
           <li><a class="reference external"
           data-doc-search-tag="fields: proc parse_field(data: openArray[byte]; field: Field): Field" href="cliff/fields.html#parse_field%2CopenArray%5Bbyte%5D%2CField">fields: proc parse_field(data: openArray[byte]; field: Field): Field</a></li>
           <li><a class="reference external"
@@ -144,11 +100,85 @@
 <li><a class="reference external"
           data-doc-search-tag="fields: object PositionedField" href="cliff/fields.html#PositionedField">fields: object PositionedField</a></li>
           </ul></dd>
+<dt><a name="slide" href="#slide"><span>slide:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: proc slide(bs: ByteSection; move: int): ByteSection" href="cliff/fields.html#slide%2CByteSection%2Cint">fields: proc slide(bs: ByteSection; move: int): ByteSection</a></li>
+          </ul></dd>
+<dt><a name="static_field" href="#static_field"><span>static_field:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="settings: proc static_field(pf: PositionedField): proc (fields: seq[Option[Variant]]): Option[
+    PositionedField]" href="cliff/settings.html#static_field%2CPositionedField">settings: proc static_field(pf: PositionedField): proc (fields: seq[Option[Variant]]): Option[
+    PositionedField]</a></li>
+          </ul></dd>
+<dt><a name="subset" href="#subset"><span>subset:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection" href="cliff/fields.html#subset%2CByteSection%2Cint%2Cint">fields: proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection</a></li>
+          </ul></dd>
 <dt><a name="to_int" href="#to_int"><span>to_int:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="fields: proc to_int[T: SomeInteger](data: openArray[byte]): T" href="cliff/fields.html#to_int%2CopenArray%5Bbyte%5D">fields: proc to_int[T: SomeInteger](data: openArray[byte]): T</a></li>
           <li><a class="reference external"
           data-doc-search-tag="fields: proc to_int[T: SomeInteger](data: ptr UncheckedArray[byte]; length: int): T" href="cliff/fields.html#to_int%2Cptr.UncheckedArray%5Bbyte%5D%2Cint">fields: proc to_int[T: SomeInteger](data: ptr UncheckedArray[byte]; length: int): T</a></li>
+          </ul></dd>
+<dt><a name="unit_mapping_n" href="#unit_mapping_n"><span>unit_mapping_n:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: proc unit_mapping_n(n: uint): ByteMapping" href="cliff/fields.html#unit_mapping_n%2Cuint">fields: proc unit_mapping_n(n: uint): ByteMapping</a></li>
+          </ul></dd>
+<dt><a name="Variant" href="#Variant"><span>Variant:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: object Variant" href="cliff/fields.html#Variant">fields: object Variant</a></li>
+          </ul></dd>
+<dt><a name="VariantKind" href="#VariantKind"><span>VariantKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: enum VariantKind" href="cliff/fields.html#VariantKind">fields: enum VariantKind</a></li>
+          </ul></dd>
+<dt><a name="vkBool" href="#vkBool"><span>vkBool:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkBool" href="cliff/fields.html#vkBool">fields: VariantKind.vkBool</a></li>
+          </ul></dd>
+<dt><a name="vkByteSeq" href="#vkByteSeq"><span>vkByteSeq:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkByteSeq" href="cliff/fields.html#vkByteSeq">fields: VariantKind.vkByteSeq</a></li>
+          </ul></dd>
+<dt><a name="vkFloat32" href="#vkFloat32"><span>vkFloat32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkFloat32" href="cliff/fields.html#vkFloat32">fields: VariantKind.vkFloat32</a></li>
+          </ul></dd>
+<dt><a name="vkFloat64" href="#vkFloat64"><span>vkFloat64:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkFloat64" href="cliff/fields.html#vkFloat64">fields: VariantKind.vkFloat64</a></li>
+          </ul></dd>
+<dt><a name="vkInt16" href="#vkInt16"><span>vkInt16:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkInt16" href="cliff/fields.html#vkInt16">fields: VariantKind.vkInt16</a></li>
+          </ul></dd>
+<dt><a name="vkInt32" href="#vkInt32"><span>vkInt32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkInt32" href="cliff/fields.html#vkInt32">fields: VariantKind.vkInt32</a></li>
+          </ul></dd>
+<dt><a name="vkInt64" href="#vkInt64"><span>vkInt64:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkInt64" href="cliff/fields.html#vkInt64">fields: VariantKind.vkInt64</a></li>
+          </ul></dd>
+<dt><a name="vkInt8" href="#vkInt8"><span>vkInt8:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkInt8" href="cliff/fields.html#vkInt8">fields: VariantKind.vkInt8</a></li>
+          </ul></dd>
+<dt><a name="vkUInt16" href="#vkUInt16"><span>vkUInt16:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkUInt16" href="cliff/fields.html#vkUInt16">fields: VariantKind.vkUInt16</a></li>
+          </ul></dd>
+<dt><a name="vkUInt32" href="#vkUInt32"><span>vkUInt32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkUInt32" href="cliff/fields.html#vkUInt32">fields: VariantKind.vkUInt32</a></li>
+          </ul></dd>
+<dt><a name="vkUInt64" href="#vkUInt64"><span>vkUInt64:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkUInt64" href="cliff/fields.html#vkUInt64">fields: VariantKind.vkUInt64</a></li>
+          </ul></dd>
+<dt><a name="vkUInt8" href="#vkUInt8"><span>vkUInt8:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="fields: VariantKind.vkUInt8" href="cliff/fields.html#vkUInt8">fields: VariantKind.vkUInt8</a></li>
           </ul></dd>
 <dt><a name="write_field" href="#write_field"><span>write_field:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -164,7 +194,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-10 08:47:56 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-23 04:53:20 UTC</small>
       </div>
     </div>
   </div>
