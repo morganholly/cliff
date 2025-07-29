@@ -25,8 +25,40 @@
   <div class="document" id="documentId">
     <div class="container">
       <h1 class="title">Index</h1>
-      Modules: <a href="cliff.html">cliff</a>, <a href="cliff/chunk.html">cliff/chunk</a>, <a href="cliff/fields.html">cliff/fields</a>, <a href="cliff/read.html">cliff/read</a>, <a href="cliff/settings.html">cliff/settings</a>.<br/><p /><h2>API symbols</h2>
-<dl><dt><a name="array_to_bytemapping" href="#array_to_bytemapping"><span>array_to_bytemapping:</span></a></dt><dd><ul class="simple">
+      Modules: <a href="cliff.html">cliff</a>, <a href="cliff/bytesection.html">cliff/bytesection</a>, <a href="cliff/chunk.html">cliff/chunk</a>, <a href="cliff/fields.html">cliff/fields</a>, <a href="cliff/read.html">cliff/read</a>, <a href="cliff/settings.html">cliff/settings</a>, <a href="cliff/write.html">cliff/write</a>.<br/><p /><h2>API symbols</h2>
+<dl><dt><a name="%60%3Dcopy%60" href="#%60%3Dcopy%60"><span>`=copy`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: proc `=copy`(bs1: var ByteSection; bs2: ByteSection): void" href="cliff/bytesection.html#%3Dcopy%2CByteSection%2CByteSection">bytesection: proc `=copy`(bs1: var ByteSection; bs2: ByteSection): void</a></li>
+          </ul></dd>
+<dt><a name="%60%3Ddestroy%60" href="#%60%3Ddestroy%60"><span>`=destroy`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: proc `=destroy`(bs: ByteSection): void" href="cliff/bytesection.html#%3Ddestroy%2CByteSection">bytesection: proc `=destroy`(bs: ByteSection): void</a></li>
+          </ul></dd>
+<dt><a name="%60%3Ddup%60" href="#%60%3Ddup%60"><span>`=dup`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: proc `=dup`(bs: ByteSection): ByteSection" href="cliff/bytesection.html#%3Ddup%2CByteSection">bytesection: proc `=dup`(bs: ByteSection): ByteSection</a></li>
+          </ul></dd>
+<dt><a name="%60%3Dsink%60" href="#%60%3Dsink%60"><span>`=sink`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: proc `=sink`(bs1: var ByteSection; bs2: ByteSection): void" href="cliff/bytesection.html#%3Dsink%2CByteSection%2CByteSection">bytesection: proc `=sink`(bs1: var ByteSection; bs2: ByteSection): void</a></li>
+          </ul></dd>
+<dt><a name="%60%3Dtrace%60" href="#%60%3Dtrace%60"><span>`=trace`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: proc `=trace`(bs: var ByteSection; env: pointer): void" href="cliff/bytesection.html#%3Dtrace%2CByteSection%2Cpointer">bytesection: proc `=trace`(bs: var ByteSection; env: pointer): void</a></li>
+          </ul></dd>
+<dt><a name="%60%3DwasMoved%60" href="#%60%3DwasMoved%60"><span>`=wasMoved`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: proc `=wasMoved`(bs: var ByteSection): void" href="cliff/bytesection.html#%3DwasMoved%2CByteSection">bytesection: proc `=wasMoved`(bs: var ByteSection): void</a></li>
+          </ul></dd>
+<dt><a name="allocate_chunk" href="#allocate_chunk"><span>allocate_chunk:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="write: proc allocate_chunk(chunk: var CliffChunkRaw)" href="cliff/write.html#allocate_chunk%2CCliffChunkRaw">write: proc allocate_chunk(chunk: var CliffChunkRaw)</a></li>
+          </ul></dd>
+<dt><a name="alloc_bs" href="#alloc_bs"><span>alloc_bs:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: proc alloc_bs(length: uint): ByteSection" href="cliff/bytesection.html#alloc_bs%2Cuint">bytesection: proc alloc_bs(length: uint): ByteSection</a></li>
+          </ul></dd>
+<dt><a name="array_to_bytemapping" href="#array_to_bytemapping"><span>array_to_bytemapping:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="fields: converter array_to_bytemapping(arr: seq[int]): ByteMapping" href="cliff/fields.html#array_to_bytemapping.c%2Cseq%5Bint%5D">fields: converter array_to_bytemapping(arr: seq[int]): ByteMapping</a></li>
           </ul></dd>
@@ -46,7 +78,7 @@
           </ul></dd>
 <dt><a name="ByteSection" href="#ByteSection"><span>ByteSection:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="fields: object ByteSection" href="cliff/fields.html#ByteSection">fields: object ByteSection</a></li>
+          data-doc-search-tag="bytesection: object ByteSection" href="cliff/bytesection.html#ByteSection">bytesection: object ByteSection</a></li>
           </ul></dd>
 <dt><a name="CliffChunk" href="#CliffChunk"><span>CliffChunk:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -64,6 +96,14 @@
 <li><a class="reference external"
           data-doc-search-tag="settings: object CliffSettingsV2" href="cliff/settings.html#CliffSettingsV2">settings: object CliffSettingsV2</a></li>
           </ul></dd>
+<dt><a name="copy_mem" href="#copy_mem"><span>copy_mem:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: proc copy_mem(dest, source: ByteSection; only_copy_if_all_fits: bool = true): ByteSection" href="cliff/bytesection.html#copy_mem%2CByteSection%2CByteSection%2Cbool">bytesection: proc copy_mem(dest, source: ByteSection; only_copy_if_all_fits: bool = true): ByteSection</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="bytesection: proc copy_mem(dest: ptr UncheckedArray[byte]; source: ByteSection): ptr UncheckedArray[
+    byte]" href="cliff/bytesection.html#copy_mem%2Cptr.UncheckedArray%5Bbyte%5D%2CByteSection">bytesection: proc copy_mem(dest: ptr UncheckedArray[byte]; source: ByteSection): ptr UncheckedArray[
+    byte]</a></li>
+          </ul></dd>
 <dt><a name="CSFieldOrderElement" href="#CSFieldOrderElement"><span>CSFieldOrderElement:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="settings: enum CSFieldOrderElement" href="cliff/settings.html#CSFieldOrderElement">settings: enum CSFieldOrderElement</a></li>
@@ -80,6 +120,10 @@
 <li><a class="reference external"
           data-doc-search-tag="fields: proc from_int[T: SomeInteger](integer: T): seq[byte]" href="cliff/fields.html#from_int%2CT">fields: proc from_int[T: SomeInteger](integer: T): seq[byte]</a></li>
           </ul></dd>
+<dt><a name="items" href="#items"><span>items:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="bytesection: iterator items(bs: ByteSection): ptr UncheckedArray[byte]" href="cliff/bytesection.html#items.i%2CByteSection">bytesection: iterator items(bs: ByteSection): ptr UncheckedArray[byte]</a></li>
+          </ul></dd>
 <dt><a name="little_endian_n" href="#little_endian_n"><span>little_endian_n:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="fields: proc little_endian_n(n: int): ByteMapping" href="cliff/fields.html#little_endian_n%2Cint">fields: proc little_endian_n(n: int): ByteMapping</a></li>
@@ -90,7 +134,7 @@
           </ul></dd>
 <dt><a name="newlength" href="#newlength"><span>newlength:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="fields: proc newlength(bs: ByteSection; length: int): ByteSection" href="cliff/fields.html#newlength%2CByteSection%2Cint">fields: proc newlength(bs: ByteSection; length: int): ByteSection</a></li>
+          data-doc-search-tag="bytesection: proc newlength(bs: ByteSection; length: int): ByteSection" href="cliff/bytesection.html#newlength%2CByteSection%2Cint">bytesection: proc newlength(bs: ByteSection; length: int): ByteSection</a></li>
           </ul></dd>
 <dt><a name="parse_chunk" href="#parse_chunk"><span>parse_chunk:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -112,9 +156,13 @@
 <li><a class="reference external"
           data-doc-search-tag="fields: proc reverse_mapping_n(n: int): ByteMapping" href="cliff/fields.html#reverse_mapping_n%2Cint">fields: proc reverse_mapping_n(n: int): ByteMapping</a></li>
           </ul></dd>
+<dt><a name="setmem_chunk" href="#setmem_chunk"><span>setmem_chunk:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="write: proc setmem_chunk(chunk: var CliffChunkRaw; bs_all: ByteSection)" href="cliff/write.html#setmem_chunk%2CCliffChunkRaw%2CByteSection">write: proc setmem_chunk(chunk: var CliffChunkRaw; bs_all: ByteSection)</a></li>
+          </ul></dd>
 <dt><a name="slide" href="#slide"><span>slide:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="fields: proc slide(bs: ByteSection; move: int): ByteSection" href="cliff/fields.html#slide%2CByteSection%2Cint">fields: proc slide(bs: ByteSection; move: int): ByteSection</a></li>
+          data-doc-search-tag="bytesection: proc slide(bs: ByteSection; move: int): ByteSection" href="cliff/bytesection.html#slide%2CByteSection%2Cint">bytesection: proc slide(bs: ByteSection; move: int): ByteSection</a></li>
           </ul></dd>
 <dt><a name="static_field" href="#static_field"><span>static_field:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -124,7 +172,7 @@
           </ul></dd>
 <dt><a name="subset" href="#subset"><span>subset:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="fields: proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection" href="cliff/fields.html#subset%2CByteSection%2Cint%2Cint">fields: proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection</a></li>
+          data-doc-search-tag="bytesection: proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection" href="cliff/bytesection.html#subset%2CByteSection%2Cint%2Cint">bytesection: proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection</a></li>
           </ul></dd>
 <dt><a name="to_int" href="#to_int"><span>to_int:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -135,6 +183,10 @@
 <dt><a name="unit_mapping_n" href="#unit_mapping_n"><span>unit_mapping_n:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="fields: proc unit_mapping_n(n: int): ByteMapping" href="cliff/fields.html#unit_mapping_n%2Cint">fields: proc unit_mapping_n(n: int): ByteMapping</a></li>
+          </ul></dd>
+<dt><a name="update_raw_chunk" href="#update_raw_chunk"><span>update_raw_chunk:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="write: proc update_raw_chunk(settings: CliffSettingsV2; chunk: var CliffChunkRaw)" href="cliff/write.html#update_raw_chunk%2CCliffSettingsV2%2CCliffChunkRaw">write: proc update_raw_chunk(settings: CliffSettingsV2; chunk: var CliffChunkRaw)</a></li>
           </ul></dd>
 <dt><a name="Variant" href="#Variant"><span>Variant:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -202,11 +254,15 @@
 <li><a class="reference external"
           data-doc-search-tag="fields: proc write_int[T: SomeInteger](integer: T; data: ptr UncheckedArray[byte]): void" href="cliff/fields.html#write_int%2CT%2Cptr.UncheckedArray%5Bbyte%5D">fields: proc write_int[T: SomeInteger](integer: T; data: ptr UncheckedArray[byte]): void</a></li>
           </ul></dd>
+<dt><a name="write_raw_chunk" href="#write_raw_chunk"><span>write_raw_chunk:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="write: proc write_raw_chunk(chunk: CliffChunkRaw; write_ptr: var ByteSection)" href="cliff/write.html#write_raw_chunk%2CCliffChunkRaw%2CByteSection">write: proc write_raw_chunk(chunk: CliffChunkRaw; write_ptr: var ByteSection)</a></li>
+          </ul></dd>
 </dl>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-29 02:58:15 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-29 08:55:35 UTC</small>
       </div>
     </div>
   </div>

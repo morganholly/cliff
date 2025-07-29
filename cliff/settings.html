@@ -81,16 +81,14 @@
   data_len_offset*: int
   data_len_scale2*: int">CliffSettingsV1</a></li>
 <li><a class="reference" href="#CliffSettingsV2" title="CliffSettingsV2 = object
-  fields_prepend*: seq[proc (fields: seq[Option[Variant]]): Option[
-      PositionedField]]
+  fields*: seq[proc (fields: seq[Option[Variant]]): Option[PositionedField]]
+  num_prepend*: int
   get_id*: proc (fields: seq[Option[Variant]]): seq[byte]
-  set_id*: proc (id: seq[byte]): PositionedField
+  set_id*: proc (id: seq[byte]): seq[(int, Option[Variant])]
   get_lens*: proc (fields: seq[Option[Variant]]): array[3, uint]
-  set_lens*: proc (lens: array[3, uint]): PositionedField
-  fields_append*: seq[proc (fields: seq[Option[Variant]]): Option[
-      PositionedField]]
+  set_lens*: proc (data_len: uint): seq[(int, Option[Variant])]
   get_crc*: proc (fields: seq[Option[Variant]]): seq[byte]
-  set_crc*: proc (crc: seq[byte]): PositionedField">CliffSettingsV2</a></li>
+  set_crc*: proc (crc: seq[byte]): seq[(int, Option[Variant])]">CliffSettingsV2</a></li>
 <li><a class="reference" href="#CSFieldOrderElement" title="CSFieldOrderElement {.size: 1.} = enum
   order_ID,                 ## - identifier of the chunk type
   order_VER,                ## - version of the chunk type. can be useful for files which are themselves one chunk, that starts with a file wide version
@@ -169,16 +167,14 @@
 </div>
 <div id="CliffSettingsV2">
   <dt><pre><a href="settings.html#CliffSettingsV2"><span class="Identifier">CliffSettingsV2</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Identifier">fields_prepend</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span>
-      <a href="fields.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">]</span>
+  <span class="Identifier">fields</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">]</span>
+  <span class="Identifier">num_prepend</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
   <span class="Identifier">get_id</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span>
-  <span class="Identifier">set_id</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="fields.html#PositionedField"><span class="Identifier">PositionedField</span></a>
+  <span class="Identifier">set_id</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Other">(</span><span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">]</span>
   <span class="Identifier">get_lens</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">uint</span><span class="Other">]</span>
-  <span class="Identifier">set_lens</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">lens</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">uint</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="fields.html#PositionedField"><span class="Identifier">PositionedField</span></a>
-  <span class="Identifier">fields_append</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span>
-      <a href="fields.html#PositionedField"><span class="Identifier">PositionedField</span></a><span class="Other">]</span><span class="Other">]</span>
+  <span class="Identifier">set_lens</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">data_len</span><span class="Other">:</span> <span class="Identifier">uint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Other">(</span><span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">]</span>
   <span class="Identifier">get_crc</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span>
-  <span class="Identifier">set_crc</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">crc</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="fields.html#PositionedField"><span class="Identifier">PositionedField</span></a></pre></dt>
+  <span class="Identifier">set_crc</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">crc</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Other">(</span><span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">Option</span><span class="Other">[</span><a href="fields.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -233,7 +229,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-29 02:58:15 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-29 08:55:35 UTC</small>
       </div>
     </div>
   </div>
