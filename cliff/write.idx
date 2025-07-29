@@ -2,4 +2,4 @@ nimTitle	write	cliff/write.html	module src/cliff/write		0
 nim	setmem_chunk	cliff/write.html#setmem_chunk,CliffChunkRaw,ByteSection	proc setmem_chunk(chunk: var CliffChunkRaw; bs_all: ByteSection)		4
 nim	allocate_chunk	cliff/write.html#allocate_chunk,CliffChunkRaw	proc allocate_chunk(chunk: var CliffChunkRaw)		12
 nim	update_raw_chunk	cliff/write.html#update_raw_chunk,CliffSettingsV2,CliffChunkRaw	proc update_raw_chunk(settings: CliffSettingsV2; chunk: var CliffChunkRaw)		15
-nim	write_raw_chunk	cliff/write.html#write_raw_chunk,CliffChunkRaw,ByteSection	proc write_raw_chunk(chunk: CliffChunkRaw; write_ptr: var ByteSection)		52
+nim	write_raw_chunk	cliff/write.html#write_raw_chunk,CliffChunkRaw,ByteSection	proc write_raw_chunk(chunk: CliffChunkRaw; write_ptr: var ByteSection)		54
