@@ -294,14 +294,14 @@ proc subset*(bs: ByteSection, move_start_forward, move_end_forward: int): ByteSe
 proc newlength*(bs: ByteSection, length: int): ByteSection =
     return ByteSection(data: bs.data, length: length)
 
-iterator items(bs: ByteSection): ptr UncheckedArray[byte] =
+iterator items*(bs: ByteSection): ptr UncheckedArray[byte] =
     var start_ptr = cast[uint](bs.data)
     var i = 0
     while i <= bs.length:
         yield cast[ptr UncheckedArray[byte]](start_ptr + uint(i))
         inc i
 
-proc copy_mem(dest, source: ByteSection, only_copy_if_all_fits: bool = true): ByteSection {.raises: [RangeDefect].} =
+proc copy_mem*(dest, source: ByteSection, only_copy_if_all_fits: bool = true): ByteSection {.raises: [RangeDefect].} =
     var fits = dest.length >= source.length
     if only_copy_if_all_fits:
         if fits:
@@ -314,7 +314,7 @@ proc copy_mem(dest, source: ByteSection, only_copy_if_all_fits: bool = true): By
         copy_mem(dest.data, source.data, copy_length)
         return ByteSection(data: cast[ptr UncheckedArray[byte]](cast[uint](dest.data) + uint(copy_length)), length: 0)
 
-proc copy_mem(dest: ptr UncheckedArray[byte], source: ByteSection): ptr UncheckedArray[byte] =
+proc copy_mem*(dest: ptr UncheckedArray[byte], source: ByteSection): ptr UncheckedArray[byte] =
     copy_mem(dest, source.data, source.length)
     return cast[ptr UncheckedArray[byte]](cast[uint](dest) + uint(source.length))
 
