@@ -28,12 +28,12 @@ test_bytes_1 &= @[
 ]
 
 var test_settings_1 = CliffSettingsV2(
-    fields_prepend : @[
+    fields: @[
         static_field(PositionedField(
             field    : Field(
                 variant : Variant(kind: vkByteSeq),
-                mapping : big_endian_n(4),
-                inverse : big_endian_n(4),
+                mapping : unit_mapping_n(4),
+                inverse : unit_mapping_n(4),
             ),
             from_end : false,
             offset   : 0,
@@ -48,9 +48,9 @@ var test_settings_1 = CliffSettingsV2(
             offset   : 4,
         ))
     ],
+    num_prepend : 2,
     get_id         : proc (fields: seq[Option[Variant]]): seq[byte] = return fields[0].get().val_byte_seq,
     get_lens       : proc (fields: seq[Option[Variant]]): array[3, uint] = return [8, uint(fields[1].get().val_uint_32), 0],
-    fields_append  : @[],
     # get_crc        : ,
 )
 
@@ -133,3 +133,62 @@ print_bytes(chunk.append)
 echo(chunk.id)
 echo(chunk.lens)
 echo(chunk.crc)
+
+var test_settings_2 = CliffSettingsV2(
+    fields: @[
+        static_field(PositionedField(
+            field: Field(
+                variant : Variant(kind: vkByteSeq),
+                mapping : big_endian_n(6),
+                inverse : big_endian_n(6),
+            ),
+            from_end : false,
+            offset   : 0,
+        )),
+        static_field(PositionedField(
+            field: Field(
+                variant : Variant(kind: vkUInt16),
+                mapping : big_endian_n(2),
+                inverse : big_endian_n(2),
+            ),
+            from_end : false,
+            offset   : 6,
+        )),
+        proc (fields: seq[Option[Variant]]): Option[PositionedField] =
+            if fields[1].get().val_uint_16 == 0:
+                return some(PositionedField(
+                                field: Field(
+                                    variant : Variant(kind: vkUInt64),
+                                    mapping : big_endian_n(8),
+                                    inverse : big_endian_n(8),
+                                ),
+                                from_end : false,
+                                offset   : 8,
+                            ))
+            else:
+                return none(PositionedField)
+    ],
+    num_prepend : 3,
+    get_id   : proc (fields: seq[Option[Variant]]): seq[byte] = return fields[0].get().val_byte_seq,
+    get_lens : proc (fields: seq[Option[Variant]]): array[3, uint] =
+        if fields[1].get().val_uint_16 == 0:
+            return [8, uint(fields[2].get().val_uint_64), 0]
+        else:
+            return [16, uint(fields[1].get().val_uint_16), 0],
+    # get_crc  : ,
+    set_id   : proc (id: seq[byte]): seq[(int, Option[Variant])] = return @[(0, some(Variant(kind: vkByteSeq, val_byte_seq: id)))],
+    set_lens : proc (data_len: uint): seq[(int, Option[Variant])] =
+        if data_len > high(uint16):
+            return @[(1, some(Variant(kind: vkUInt16, val_uint16: 0'u16))), (2, some(Variant(kind: vkUInt64, val_uint64: uint64(data_len))))]
+        else:
+            return @[(1, some(Variant(kind: vkUInt16, val_uint16: uint16(data_len))))],
+    set_crc  : proc (crc: seq[byte]): seq[(int, Option[Variant])] = @[(3, none(Variant))],
+)
+
+var test2_created_chunk = CliffChunkRaw(
+    id   : cast[seq[byte]](@['c', 'l', 'i', 'f', 'f', '2']),
+    lens : [8, 256, 0],
+    crc  : @[],
+)
+
+test_settings_2.update_raw_chunk(test2_created_chunk)

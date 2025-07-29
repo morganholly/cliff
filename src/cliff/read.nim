@@ -3,7 +3,7 @@ import fields, settings, chunk
 
 proc parse_chunk*(settings: CliffSettingsV2, data: ByteSection): CliffChunkRaw =
     var field_values: seq[Option[Variant]]
-    for pf in settings.fields_prepend:
+    for pf in settings.fields:
         var maybe_field: Option[PositionedField] = pf(field_values)
         if isSome(maybe_field):
             field_values &= some(data.parse_field(maybe_field.get()))

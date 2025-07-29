@@ -43,13 +43,14 @@ proc static_field*(pf: PositionedField): proc (fields: seq[Option[Variant]]): Op
 
 type
     CliffSettingsV2* = object
-        fields_prepend *: seq[proc (fields: seq[Option[Variant]]): Option[PositionedField]]
+        fields *: seq[proc (fields: seq[Option[Variant]]): Option[PositionedField]]
+        num_prepend *: int
+
         get_id *: proc (fields: seq[Option[Variant]]): seq[byte]
-        set_id *: proc (id: seq[byte]): PositionedField
+        set_id *: proc (id: seq[byte]): seq[(int, Option[Variant])] # index in fields list to replace
 
         get_lens *: proc (fields: seq[Option[Variant]]): array[3, uint] # prepend, data, append
-        set_lens *: proc (lens: array[3, uint]): PositionedField
+        set_lens *: proc (data_len: uint): seq[(int, Option[Variant])] # index in fields list to replace
 
-        fields_append *: seq[proc (fields: seq[Option[Variant]]): Option[PositionedField]]
         get_crc *: proc (fields: seq[Option[Variant]]): seq[byte]
-        set_crc *: proc (crc: seq[byte]): PositionedField
+        set_crc *: proc (crc: seq[byte]): seq[(int, Option[Variant])] # index in fields list to replace
