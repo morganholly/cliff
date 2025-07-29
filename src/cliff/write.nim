@@ -30,9 +30,9 @@ proc update_raw_chunk*(settings: CliffSettingsV2, chunk: var CliffChunkRaw) =
             chunk.all_fields[i[0]] = i[1]
 
     let has_mem = [
-        chunk.prepend.data == nil,
-        chunk.data.data == nil,
-        chunk.append.data == nil
+        chunk.prepend.data != nil,
+        chunk.data.data != nil,
+        chunk.append.data != nil
     ]
 
     if has_mem == [false, false, false]:
@@ -41,7 +41,7 @@ proc update_raw_chunk*(settings: CliffSettingsV2, chunk: var CliffChunkRaw) =
         # loop and check and allocate individually
         discard
 
-    for i in 0..<len(chunk.all_fields):
+    for i in 0..<min(len(chunk.all_fields), len(settings.fields)):
         var opt_pf = settings.fields[i](chunk.all_fields[0..i])
         if isSome(opt_pf):
             if i < settings.num_prepend:
