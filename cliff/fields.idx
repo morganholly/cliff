@@ -35,9 +35,9 @@ nim	ByteSection	cliff/fields.html#ByteSection	object ByteSection		274
 nim	slide	cliff/fields.html#slide,ByteSection,int	proc slide(bs: ByteSection; move: int): ByteSection		278
 nim	subset	cliff/fields.html#subset,ByteSection,int,int	proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection		286
 nim	newlength	cliff/fields.html#newlength,ByteSection,int	proc newlength(bs: ByteSection; length: int): ByteSection		294
-nim	PositionedField	cliff/fields.html#PositionedField	object PositionedField		298
-nim	parse_field	cliff/fields.html#parse_field,ByteSection,PositionedField	proc parse_field(section: ByteSection; pf: PositionedField): Variant		307
-nim	write_field	cliff/fields.html#write_field,ByteSection,PositionedField	proc write_field(section: ByteSection; pf: PositionedField): void		314
+nim	PositionedField	cliff/fields.html#PositionedField	object PositionedField		322
+nim	parse_field	cliff/fields.html#parse_field,ByteSection,PositionedField	proc parse_field(section: ByteSection; pf: PositionedField): Variant		331
+nim	write_field	cliff/fields.html#write_field,ByteSection,PositionedField	proc write_field(section: ByteSection; pf: PositionedField): void		338
 nimgrp	parsefield	cliff/fields.html#parse_field-procs-all	proc		197
 nimgrp	toint	cliff/fields.html#to_int-procs-all	proc		88
 nimgrp	writefield	cliff/fields.html#write_field-procs-all	proc		268
