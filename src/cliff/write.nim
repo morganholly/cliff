@@ -38,8 +38,10 @@ proc update_raw_chunk*(settings: CliffSettingsV2, chunk: var CliffChunkRaw) =
     if has_mem == [false, false, false]:
         allocate_chunk(chunk)
     elif has_mem != [true, true, true]:
-        # loop and check and allocate individually
-        discard
+        var bytesections = [chunk.prepend, chunk.data, chunk.append]
+        for i in 0..2:
+            if not has_mem[i]:
+                bytesections[i] = alloc_bs(chunk.lens[i])
 
     for i in 0..<min(len(chunk.all_fields), len(settings.fields)):
         var opt_pf = settings.fields[i](chunk.all_fields[0..i])

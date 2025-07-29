@@ -54,6 +54,7 @@ proc alloc_bs*(length: uint): ByteSection =
     )
 
 
+# if not owned_memory, should check bounds and realloc if needed
 proc slide*(bs: ByteSection, move: int): ByteSection =
     var new_ptr = cast[uint](bs.data)
     if move >= 0:
