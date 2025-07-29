@@ -9,11 +9,43 @@ type
         mapping*: seq[int]
         correct*: bool # true if all numbers `0..<len(mapping)` are present
 
-proc unit_mapping_n*(n: uint): ByteMapping =
-    result.mapping = newSeqOfCap[int](int(n))
-    for i in 0..<n:
-        result.mapping &= int(i)
-    result.correct = true
+proc unit_mapping_n*(n: int): ByteMapping =
+    var n_clamp = if n < 1: 1 else: n
+    if system.cpuEndian == littleEndian:
+        result.mapping = newSeqOfCap[int](n_clamp)
+        for i in 0..<n_clamp:
+            result.mapping &= i
+        result.correct = true
+    else:
+        result.mapping = newSeqOfCap[int](n_clamp)
+        for i in 0..<n_clamp:
+            result.mapping &= n_clamp - i - 1
+        result.correct = true
+
+proc reverse_mapping_n*(n: int): ByteMapping =
+    var n_clamp = if n < 1: 1 else: n
+    if system.cpuEndian == bigEndian:
+        result.mapping = newSeqOfCap[int](n_clamp)
+        for i in 0..<n_clamp:
+            result.mapping &= i
+        result.correct = true
+    else:
+        result.mapping = newSeqOfCap[int](n_clamp)
+        for i in 0..<n_clamp:
+            result.mapping &= n_clamp - i - 1
+        result.correct = true
+
+proc little_endian_n*(n: int): ByteMapping =
+    if system.cpuEndian == littleEndian:
+        return unit_mapping_n(n)
+    else:
+        return reverse_mapping_n(n)
+
+proc big_endian_n*(n: int): ByteMapping =
+    if system.cpuEndian == bigEndian:
+        return unit_mapping_n(n)
+    else:
+        return reverse_mapping_n(n)
 
 converter array_to_bytemapping*(arr: seq[int]): ByteMapping =
     var check: seq[bool] = newSeq[bool](len(arr))

@@ -14,7 +14,7 @@ test_bytes_1 &= @[
     'c', 'l', 'i', '\xFF'
 ]
 
-test_bytes_1 &= from_int[uint32](32)
+test_bytes_1 &= from_int[uint32](32).bytemap(big_endian_n(4))
 
 test_bytes_1 &= @[
     'c', 'l', 'i', '\xFF',
@@ -32,8 +32,8 @@ var test_settings_1 = CliffSettingsV2(
         static_field(PositionedField(
             field    : Field(
                 variant : Variant(kind: vkByteSeq),
-                mapping : unit_mapping_n(4),
-                inverse : unit_mapping_n(4),
+                mapping : big_endian_n(4),
+                inverse : big_endian_n(4),
             ),
             from_end : false,
             offset   : 0,
@@ -41,8 +41,8 @@ var test_settings_1 = CliffSettingsV2(
         static_field(PositionedField(
             field    : Field(
                 variant : Variant(kind: vkUInt32),
-                mapping : unit_mapping_n(4),
-                inverse : unit_mapping_n(4),
+                mapping : big_endian_n(4),
+                inverse : big_endian_n(4),
             ),
             from_end : false,
             offset   : 4,
