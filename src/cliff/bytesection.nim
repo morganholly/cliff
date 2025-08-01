@@ -5,45 +5,47 @@ type
         owned_memory *: bool
 
 
-proc `=destroy`*(bs: ByteSection): void =
-    if bs.owned_memory == true and bs.data != nil:
-        dealloc(bs.data)
+# this was causing it to be automatically deallocated and filled with garbage
 
-proc `=wasMoved`*(bs: var ByteSection): void =
-    if bs.owned_memory == true:
-        bs.data = nil
+# proc `=destroy`*(bs: ByteSection): void =
+#     if bs.owned_memory == true and bs.data != nil:
+#         dealloc(bs.data)
 
-proc `=trace`*(bs: var ByteSection, env: pointer): void =
-    discard
+# proc `=wasMoved`*(bs: var ByteSection): void =
+#     if bs.owned_memory == true:
+#         bs.data = nil
 
-proc `=copy`*(bs1: var ByteSection, bs2: ByteSection): void =
-    if bs1.data == bs2.data: return
-    `=destroy`(bs1)
-    `=wasMoved`(bs1)
-    bs1.length       = bs2.length
-    bs1.owned_memory = true
-    if bs2.data != nil:
-        if bs2.owned_memory == true:
-            bs1.data = cast[ptr UncheckedArray[byte]](alloc0(bs2.length))
-            for i in 0..<bs2.length:
-                bs1.data[i] = bs2.data[i]
-        else:
-            bs1.data = bs2.data
+# proc `=trace`*(bs: var ByteSection, env: pointer): void =
+#     discard
 
-proc `=dup`*(bs: ByteSection): ByteSection =
-    if bs.data != nil:
-        if bs.owned_memory == true:
-            result.data = cast[ptr UncheckedArray[byte]](alloc0(bs.length))
-            for i in 0..<bs.length:
-                result.data[i] = `=dup`(bs.data[i])
-        else:
-            result.data = bs.data
+# proc `=copy`*(bs1: var ByteSection, bs2: ByteSection): void =
+#     if bs1.data == bs2.data: return
+#     `=destroy`(bs1)
+#     `=wasMoved`(bs1)
+#     bs1.length       = bs2.length
+#     bs1.owned_memory = true
+#     if bs2.data != nil:
+#         if bs2.owned_memory == true:
+#             bs1.data = cast[ptr UncheckedArray[byte]](alloc0(bs2.length))
+#             for i in 0..<bs2.length:
+#                 bs1.data[i] = bs2.data[i]
+#         else:
+#             bs1.data = bs2.data
 
-proc `=sink`*(bs1: var ByteSection, bs2: ByteSection): void =
-    `=destroy`(bs1)
-    bs1.data         = bs2.data
-    bs1.length       = bs2.length
-    bs1.owned_memory = bs2.owned_memory
+# proc `=dup`*(bs: ByteSection): ByteSection =
+#     if bs.data != nil:
+#         if bs.owned_memory == true:
+#             result.data = cast[ptr UncheckedArray[byte]](alloc0(bs.length))
+#             for i in 0..<bs.length:
+#                 result.data[i] = `=dup`(bs.data[i])
+#         else:
+#             result.data = bs.data
+
+# proc `=sink`*(bs1: var ByteSection, bs2: ByteSection): void =
+#     `=destroy`(bs1)
+#     bs1.data         = bs2.data
+#     bs1.length       = bs2.length
+#     bs1.owned_memory = bs2.owned_memory
 
 
 proc alloc_bs*(length: uint): ByteSection =
@@ -81,6 +83,10 @@ iterator items*(bs: ByteSection): ptr UncheckedArray[byte] =
     while i <= bs.length:
         yield cast[ptr UncheckedArray[byte]](start_ptr + uint(i))
         inc i
+
+proc `$`*(bs: ByteSection): string =
+    for i in 0..<bs.length:
+        result &= $(bs.data[i])
 
 proc copy_mem*(dest, source: ByteSection, only_copy_if_all_fits: bool = true): ByteSection {.raises: [RangeDefect].} =
     var fits = dest.length >= source.length

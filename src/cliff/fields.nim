@@ -171,7 +171,7 @@ type
 
     Variant* = object
         case kind *: VariantKind:
-            of vkBool:    val_bool *: bool
+            of vkBool:    val_bool     *: bool
             of vkInt8:    val_int_8    *: int8
             of vkInt16:   val_int_16   *: int16
             of vkInt32:   val_int_32   *: int32
@@ -184,6 +184,22 @@ type
             of vkFloat64: val_float_64 *: float64
             of vkByteSeq: val_byte_seq *: seq[byte]
 
+proc `$`*(v: Variant): string =
+    case v.kind:
+        of vkBool:    return $v.val_bool
+        of vkInt8:    return $v.val_int_8
+        of vkInt16:   return $v.val_int_16
+        of vkInt32:   return $v.val_int_32
+        of vkInt64:   return $v.val_int_64
+        of vkUInt8:   return $v.val_uint_8
+        of vkUInt16:  return $v.val_uint_16
+        of vkUInt32:  return $v.val_uint_32
+        of vkUInt64:  return $v.val_uint_64
+        of vkFloat32: return $v.val_float_32
+        of vkFloat64: return $v.val_float_64
+        of vkByteSeq: return $v.val_byte_seq
+
+type
     Field* = object
         variant *: Variant
         mapping *: ByteMapping
