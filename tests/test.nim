@@ -203,12 +203,17 @@ print_bytes(test2_created_chunk.data)
 print_bytes(test2_created_chunk.append)
 echo()
 
+echo("write buf len: " & $(test2_created_chunk.lens[0] + test2_created_chunk.lens[1] + test2_created_chunk.lens[2]))
 var written_chunk = alloc_bs(test2_created_chunk.lens[0] + test2_created_chunk.lens[1] + test2_created_chunk.lens[2])
+echo(written_chunk.length)
+echo(written_chunk)
 
-test2_created_chunk.write_raw_chunk(written_chunk)
+var written_chunk_stepped_along = written_chunk
+test2_created_chunk.write_raw_chunk(written_chunk_stepped_along) # write steps for sequential chunk writing
+echo(written_chunk.length)
+echo(written_chunk)
 
 print_bytes(written_chunk)
-
 
 var chunk2: CliffChunkRaw = test_settings_2.parse_chunk(written_chunk)
 
@@ -217,3 +222,11 @@ for field in chunk2.all_fields:
         echo(field.get())
     else:
         echo("empty")
+
+assert written_chunk.length == 264
+
+assert isSome(chunk2.all_fields[0])
+assert chunk2.all_fields[0].get().val_byte_seq == cast[seq[byte]](@['c', 'l', 'i', 'f', 'f', '2'])
+
+assert isSome(chunk2.all_fields[1])
+assert chunk2.all_fields[1].get().val_uint_16 == 256'u16
