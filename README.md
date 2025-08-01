@@ -12,3 +12,7 @@ IFF, RIFF, AIFF, PNG, JPEG`(.*)`, and likely GIF, should all be compatible, alon
 The goal of Cliff is to be the backbone of file IO for any IFF-like file format, so that you simply assign or define the parser settings, and define `proc`s for converting binary data to meaningful objects, and the rest is handled by Cliff.
 
 MIT Licensed.
+
+
+### Example code:
+- [cliff tests/test.nim](tests/test.nim)
