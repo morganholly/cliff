@@ -38,8 +38,25 @@ type
         data_len_offset *: int
         data_len_scale2 *: int
 
-proc static_field*(pf: PositionedField): proc (fields: seq[Option[Variant]]): Option[PositionedField] =
-    return proc (fields: seq[Option[Variant]]): Option[PositionedField] = return some(pf)
+proc static_field*(pf: PositionedField, data_index: int): proc (fields: seq[Option[Variant]]): Option[PositionedField] =
+    return proc (fields: seq[Option[Variant]]): Option[PositionedField] =
+        # echo(fields)
+        var pf_out = pf
+        if (data_index < len(fields)) and isSome(fields[data_index]):
+            case pf.field.variant.kind:
+                of vkBool:    pf_out.field.variant.val_bool     = fields[data_index].get().val_bool
+                of vkInt8:    pf_out.field.variant.val_int_8    = fields[data_index].get().val_int_8
+                of vkInt16:   pf_out.field.variant.val_int_16   = fields[data_index].get().val_int_16
+                of vkInt32:   pf_out.field.variant.val_int_32   = fields[data_index].get().val_int_32
+                of vkInt64:   pf_out.field.variant.val_int_64   = fields[data_index].get().val_int_64
+                of vkUInt8:   pf_out.field.variant.val_uint_8   = fields[data_index].get().val_uint_8
+                of vkUInt16:  pf_out.field.variant.val_uint_16  = fields[data_index].get().val_uint_16
+                of vkUInt32:  pf_out.field.variant.val_uint_32  = fields[data_index].get().val_uint_32
+                of vkUInt64:  pf_out.field.variant.val_uint_64  = fields[data_index].get().val_uint_64
+                of vkFloat32: pf_out.field.variant.val_float_32 = fields[data_index].get().val_float_32
+                of vkFloat64: pf_out.field.variant.val_float_64 = fields[data_index].get().val_float_64
+                of vkByteSeq: pf_out.field.variant.val_byte_seq = fields[data_index].get().val_byte_seq
+        return some(pf_out)
 
 type
     CliffSettingsV2* = object

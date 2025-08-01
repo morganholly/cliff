@@ -37,7 +37,7 @@ var test_settings_1 = CliffSettingsV2(
             ),
             from_end : false,
             offset   : 0,
-        )),
+        ), 0),
         static_field(PositionedField(
             field    : Field(
                 variant : Variant(kind: vkUInt32),
@@ -46,7 +46,7 @@ var test_settings_1 = CliffSettingsV2(
             ),
             from_end : false,
             offset   : 4,
-        ))
+        ), 1)
     ],
     num_prepend : 2,
     get_id         : proc (fields: seq[Option[Variant]]): seq[byte] = return fields[0].get().val_byte_seq,
@@ -58,11 +58,12 @@ proc print_byte_line(bytes: openArray[byte]) =
     for b in bytes:
         stdout.write(tohex(b) & " ")
     stdout.write("| ")
+    let basic_ascii = PunctuationChars + Letters + Digits
     for b in bytes:
         # if chr(b) == ' ':
         #     stdout.write("sp ")
         # el
-        if chr(b) in PrintableChars:
+        if chr(b) in basic_ascii:
             stdout.write(chr(b) & "  ")
         else:
             # stdout.write(dim("?"))
@@ -77,13 +78,14 @@ proc print_byte_line(bytes: openArray[byte], num_filled: int) =
         else:
             stdout.write("-- ")
     stdout.write("| ")
+    let basic_ascii = PunctuationChars + Letters + Digits
     for i in 0..<len(bytes):
         if i < num_filled:
             var b = bytes[i]
             # if chr(b) == ' ':
             #     stdout.write("sp ")
             # el
-            if chr(b) in PrintableChars:
+            if chr(b) in basic_ascii:
                 stdout.write(chr(b) & "  ")
             else:
                 # stdout.write(dim("?"))
@@ -134,17 +136,19 @@ echo(chunk.id)
 echo(chunk.lens)
 echo(chunk.crc)
 
+echo("-- test 2 --")
+
 var test_settings_2 = CliffSettingsV2(
     fields: @[
         static_field(PositionedField(
             field: Field(
                 variant : Variant(kind: vkByteSeq),
-                mapping : big_endian_n(6),
-                inverse : big_endian_n(6),
+                mapping : little_endian_n(6),
+                inverse : little_endian_n(6),
             ),
             from_end : false,
             offset   : 0,
-        )),
+        ), 0),
         static_field(PositionedField(
             field: Field(
                 variant : Variant(kind: vkUInt16),
@@ -153,7 +157,7 @@ var test_settings_2 = CliffSettingsV2(
             ),
             from_end : false,
             offset   : 6,
-        )),
+        ), 1),
         proc (fields: seq[Option[Variant]]): Option[PositionedField] =
             if fields[1].get().val_uint_16 == 0:
                 return some(PositionedField(
@@ -192,3 +196,24 @@ var test2_created_chunk = CliffChunkRaw(
 )
 
 test_settings_2.update_raw_chunk(test2_created_chunk)
+
+echo("updated raw chunk sections")
+print_bytes(test2_created_chunk.prepend)
+print_bytes(test2_created_chunk.data)
+print_bytes(test2_created_chunk.append)
+echo()
+
+var written_chunk = alloc_bs(test2_created_chunk.lens[0] + test2_created_chunk.lens[1] + test2_created_chunk.lens[2])
+
+test2_created_chunk.write_raw_chunk(written_chunk)
+
+print_bytes(written_chunk)
+
+
+var chunk2: CliffChunkRaw = test_settings_2.parse_chunk(written_chunk)
+
+for field in chunk2.all_fields:
+    if isSome(field):
+        echo(field.get())
+    else:
+        echo("empty")
