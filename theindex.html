@@ -26,29 +26,11 @@
     <div class="container">
       <h1 class="title">Index</h1>
       Modules: <a href="cliff.html">cliff</a>, <a href="cliff/bytesection.html">cliff/bytesection</a>, <a href="cliff/chunk.html">cliff/chunk</a>, <a href="cliff/fields.html">cliff/fields</a>, <a href="cliff/read.html">cliff/read</a>, <a href="cliff/settings.html">cliff/settings</a>, <a href="cliff/write.html">cliff/write</a>.<br/><p /><h2>API symbols</h2>
-<dl><dt><a name="%60%3Dcopy%60" href="#%60%3Dcopy%60"><span>`=copy`:</span></a></dt><dd><ul class="simple">
+<dl><dt><a name="%60%24%60" href="#%60%24%60"><span>`$`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="bytesection: proc `=copy`(bs1: var ByteSection; bs2: ByteSection): void" href="cliff/bytesection.html#%3Dcopy%2CByteSection%2CByteSection">bytesection: proc `=copy`(bs1: var ByteSection; bs2: ByteSection): void</a></li>
-          </ul></dd>
-<dt><a name="%60%3Ddestroy%60" href="#%60%3Ddestroy%60"><span>`=destroy`:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="bytesection: proc `=destroy`(bs: ByteSection): void" href="cliff/bytesection.html#%3Ddestroy%2CByteSection">bytesection: proc `=destroy`(bs: ByteSection): void</a></li>
-          </ul></dd>
-<dt><a name="%60%3Ddup%60" href="#%60%3Ddup%60"><span>`=dup`:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="bytesection: proc `=dup`(bs: ByteSection): ByteSection" href="cliff/bytesection.html#%3Ddup%2CByteSection">bytesection: proc `=dup`(bs: ByteSection): ByteSection</a></li>
-          </ul></dd>
-<dt><a name="%60%3Dsink%60" href="#%60%3Dsink%60"><span>`=sink`:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="bytesection: proc `=sink`(bs1: var ByteSection; bs2: ByteSection): void" href="cliff/bytesection.html#%3Dsink%2CByteSection%2CByteSection">bytesection: proc `=sink`(bs1: var ByteSection; bs2: ByteSection): void</a></li>
-          </ul></dd>
-<dt><a name="%60%3Dtrace%60" href="#%60%3Dtrace%60"><span>`=trace`:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="bytesection: proc `=trace`(bs: var ByteSection; env: pointer): void" href="cliff/bytesection.html#%3Dtrace%2CByteSection%2Cpointer">bytesection: proc `=trace`(bs: var ByteSection; env: pointer): void</a></li>
-          </ul></dd>
-<dt><a name="%60%3DwasMoved%60" href="#%60%3DwasMoved%60"><span>`=wasMoved`:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="bytesection: proc `=wasMoved`(bs: var ByteSection): void" href="cliff/bytesection.html#%3DwasMoved%2CByteSection">bytesection: proc `=wasMoved`(bs: var ByteSection): void</a></li>
+          data-doc-search-tag="bytesection: proc `$`(bs: ByteSection): string" href="cliff/bytesection.html#%24%2CByteSection">bytesection: proc `$`(bs: ByteSection): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="fields: proc `$`(v: Variant): string" href="cliff/fields.html#%24%2CVariant">fields: proc `$`(v: Variant): string</a></li>
           </ul></dd>
 <dt><a name="allocate_chunk" href="#allocate_chunk"><span>allocate_chunk:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -166,9 +148,9 @@
           </ul></dd>
 <dt><a name="static_field" href="#static_field"><span>static_field:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="settings: proc static_field(pf: PositionedField): proc (fields: seq[Option[Variant]]): Option[
-    PositionedField]" href="cliff/settings.html#static_field%2CPositionedField">settings: proc static_field(pf: PositionedField): proc (fields: seq[Option[Variant]]): Option[
-    PositionedField]</a></li>
+          data-doc-search-tag="settings: proc static_field(pf: PositionedField; data_index: int): proc (
+    fields: seq[Option[Variant]]): Option[PositionedField]" href="cliff/settings.html#static_field%2CPositionedField%2Cint">settings: proc static_field(pf: PositionedField; data_index: int): proc (
+    fields: seq[Option[Variant]]): Option[PositionedField]</a></li>
           </ul></dd>
 <dt><a name="subset" href="#subset"><span>subset:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -262,7 +244,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-29 22:53:58 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-08-01 22:48:20 UTC</small>
       </div>
     </div>
   </div>

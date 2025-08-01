@@ -1,16 +1,11 @@
 nimTitle	bytesection	cliff/bytesection.html	module src/cliff/bytesection		0
 nim	ByteSection	cliff/bytesection.html#ByteSection	object ByteSection		2
-nim	`=destroy`	cliff/bytesection.html#=destroy,ByteSection	proc `=destroy`(bs: ByteSection): void		8
-nim	`=wasMoved`	cliff/bytesection.html#=wasMoved,ByteSection	proc `=wasMoved`(bs: var ByteSection): void		12
-nim	`=trace`	cliff/bytesection.html#=trace,ByteSection,pointer	proc `=trace`(bs: var ByteSection; env: pointer): void		16
-nim	`=copy`	cliff/bytesection.html#=copy,ByteSection,ByteSection	proc `=copy`(bs1: var ByteSection; bs2: ByteSection): void		19
-nim	`=dup`	cliff/bytesection.html#=dup,ByteSection	proc `=dup`(bs: ByteSection): ByteSection		33
-nim	`=sink`	cliff/bytesection.html#=sink,ByteSection,ByteSection	proc `=sink`(bs1: var ByteSection; bs2: ByteSection): void		42
-nim	alloc_bs	cliff/bytesection.html#alloc_bs,uint	proc alloc_bs(length: uint): ByteSection		49
-nim	slide	cliff/bytesection.html#slide,ByteSection,int	proc slide(bs: ByteSection; move: int): ByteSection		58
-nim	subset	cliff/bytesection.html#subset,ByteSection,int,int	proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection		66
-nim	newlength	cliff/bytesection.html#newlength,ByteSection,int	proc newlength(bs: ByteSection; length: int): ByteSection		74
-nim	items	cliff/bytesection.html#items.i,ByteSection	iterator items(bs: ByteSection): ptr UncheckedArray[byte]		78
-nim	copy_mem	cliff/bytesection.html#copy_mem,ByteSection,ByteSection,bool	proc copy_mem(dest, source: ByteSection; only_copy_if_all_fits: bool = true): ByteSection		85
-nim	copy_mem	cliff/bytesection.html#copy_mem,ptr.UncheckedArray[byte],ByteSection	proc copy_mem(dest: ptr UncheckedArray[byte]; source: ByteSection): ptr UncheckedArray[\n    byte]		98
-nimgrp	copymem	cliff/bytesection.html#copy_mem-procs-all	proc		85
+nim	alloc_bs	cliff/bytesection.html#alloc_bs,uint	proc alloc_bs(length: uint): ByteSection		51
+nim	slide	cliff/bytesection.html#slide,ByteSection,int	proc slide(bs: ByteSection; move: int): ByteSection		60
+nim	subset	cliff/bytesection.html#subset,ByteSection,int,int	proc subset(bs: ByteSection; move_start_forward, move_end_forward: int): ByteSection		68
+nim	newlength	cliff/bytesection.html#newlength,ByteSection,int	proc newlength(bs: ByteSection; length: int): ByteSection		76
+nim	items	cliff/bytesection.html#items.i,ByteSection	iterator items(bs: ByteSection): ptr UncheckedArray[byte]		80
+nim	`$`	cliff/bytesection.html#$,ByteSection	proc `$`(bs: ByteSection): string		87
+nim	copy_mem	cliff/bytesection.html#copy_mem,ByteSection,ByteSection,bool	proc copy_mem(dest, source: ByteSection; only_copy_if_all_fits: bool = true): ByteSection		91
+nim	copy_mem	cliff/bytesection.html#copy_mem,ptr.UncheckedArray[byte],ByteSection	proc copy_mem(dest: ptr UncheckedArray[byte]; source: ByteSection): ptr UncheckedArray[\n    byte]		104
+nimgrp	copymem	cliff/bytesection.html#copy_mem-procs-all	proc		91

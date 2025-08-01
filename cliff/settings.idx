@@ -1,5 +1,5 @@
 nimTitle	settings	cliff/settings.html	module src/cliff/settings		0
 nim	CSFieldOrderElement	cliff/settings.html#CSFieldOrderElement	enum CSFieldOrderElement		5
 nim	CliffSettingsV1	cliff/settings.html#CliffSettingsV1	object CliffSettingsV1		14
-nim	static_field	cliff/settings.html#static_field,PositionedField	proc static_field(pf: PositionedField): proc (fields: seq[Option[Variant]]): Option[\n    PositionedField]		41
-nim	CliffSettingsV2	cliff/settings.html#CliffSettingsV2	object CliffSettingsV2		45
+nim	static_field	cliff/settings.html#static_field,PositionedField,int	proc static_field(pf: PositionedField; data_index: int): proc (\n    fields: seq[Option[Variant]]): Option[PositionedField]		41
+nim	CliffSettingsV2	cliff/settings.html#CliffSettingsV2	object CliffSettingsV2		62

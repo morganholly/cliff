@@ -26,15 +26,16 @@ nim	vkFloat64	cliff/fields.html#vkFloat64	VariantKind.vkFloat64		156
 nim	vkByteSeq	cliff/fields.html#vkByteSeq	VariantKind.vkByteSeq		156
 nim	VariantKind	cliff/fields.html#VariantKind	enum VariantKind		156
 nim	Variant	cliff/fields.html#Variant	object Variant		172
-nim	Field	cliff/fields.html#Field	object Field		187
-nim	parse_field	cliff/fields.html#parse_field,openArray[byte],Field	proc parse_field(data: openArray[byte]; field: Field): Field		198
-nim	parse_field	cliff/fields.html#parse_field,ptr.UncheckedArray[byte],Field	proc parse_field(data: ptr UncheckedArray[byte]; field: Field): Field		228
-nim	field_to_bytes	cliff/fields.html#field_to_bytes,Field	proc field_to_bytes(field: Field): seq[byte]		252
-nim	write_field	cliff/fields.html#write_field,ptr.UncheckedArray[byte],Field	proc write_field(data: ptr UncheckedArray[byte]; field: Field): void		269
-nim	PositionedField	cliff/fields.html#PositionedField	object PositionedField		275
-nim	parse_field	cliff/fields.html#parse_field,ByteSection,PositionedField	proc parse_field(section: ByteSection; pf: PositionedField): Variant		284
-nim	write_field	cliff/fields.html#write_field,ByteSection,PositionedField	proc write_field(section: ByteSection; pf: PositionedField): void		291
-nimgrp	parsefield	cliff/fields.html#parse_field-procs-all	proc		198
+nim	`$`	cliff/fields.html#$,Variant	proc `$`(v: Variant): string		187
+nim	Field	cliff/fields.html#Field	object Field		203
+nim	parse_field	cliff/fields.html#parse_field,openArray[byte],Field	proc parse_field(data: openArray[byte]; field: Field): Field		214
+nim	parse_field	cliff/fields.html#parse_field,ptr.UncheckedArray[byte],Field	proc parse_field(data: ptr UncheckedArray[byte]; field: Field): Field		244
+nim	field_to_bytes	cliff/fields.html#field_to_bytes,Field	proc field_to_bytes(field: Field): seq[byte]		268
+nim	write_field	cliff/fields.html#write_field,ptr.UncheckedArray[byte],Field	proc write_field(data: ptr UncheckedArray[byte]; field: Field): void		285
+nim	PositionedField	cliff/fields.html#PositionedField	object PositionedField		291
+nim	parse_field	cliff/fields.html#parse_field,ByteSection,PositionedField	proc parse_field(section: ByteSection; pf: PositionedField): Variant		300
+nim	write_field	cliff/fields.html#write_field,ByteSection,PositionedField	proc write_field(section: ByteSection; pf: PositionedField): void		307
+nimgrp	parsefield	cliff/fields.html#parse_field-procs-all	proc		214
 nimgrp	toint	cliff/fields.html#to_int-procs-all	proc		89
-nimgrp	writefield	cliff/fields.html#write_field-procs-all	proc		269
+nimgrp	writefield	cliff/fields.html#write_field-procs-all	proc		285
 nimgrp	bytemap	cliff/fields.html#bytemap-procs-all	proc		68
